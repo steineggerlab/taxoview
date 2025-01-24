@@ -1,9 +1,7 @@
 <template>
     <svg
-      :id="id"
       ref="sankeyContainer"
-      :class="svgClass"
-      :data-dynamic="true"     
+
     ></svg>
 </template>
 
@@ -11,20 +9,14 @@
 import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
 import { sankeyRankColumns } from "./rankUtils.js";
-
+import TSVParser from "./tsvParser.js";
+ 
 export default {
   name: "SankeyDiagram",
   props: {
-    id: {
-			type: String,
-			required: true,
-		},
-		isSubtree: {
-			type: Boolean,
-			required: true,
-		},
+
     rawData: {
-      type: Object,
+      type: String,
       required: true
     },
 
@@ -55,11 +47,7 @@ export default {
 		},
   },
   data: () => ({
-    heading: "Test",
-    divStyle: {},  // an empty object is still a dynamic binding
-    svgClass: "sdfs",
-    divStyle: {},
-      //
+    parsedData: [], // Holds the parsed JSON data
     allNodesByRank: {},
     nodesByDepth: {},
 
@@ -91,50 +79,18 @@ export default {
 				"#BC7576",
 			], // Define color scale (https://wondernote.org/color-palettes-for-web-digital-blog-graphic-design-with-hexadecimal-codes/)
   }),
-  computed: {
-    filteredData() {
-    console.log("filter"); // DEBUG
 
-    // Reference dependencies explicitly
-    const minCladeReadsMode = this.minCladeReadsMode;
-    const minReads = this.minReads;
-    const showAll = this.showAll;
-
-    // Filter data based on configurations
-    if (showAll) {
-      return this.rawData;
-    }
-
-    if (!this.rawData) {
-      return [];
-    }
-
-    return this.rawData.filter((entry) => {
-      let passesMinReads = false;
-      if (minCladeReadsMode === "%") {
-        passesMinReads = parseFloat(entry.proportion) >= minReads;
-      } else if (minCladeReadsMode === "#") {
-        passesMinReads = parseFloat(entry.clade_reads) >= minReads;
-      }
-      return passesMinReads;
-    });
-  },
-    graphData() {
-      console.log("graphdata"); // DEBUG
-			return this.parseData(this.filteredData);
-		},
-  },
   watch: {
     rawData: {
-			immediate: true, // FIXME: Called immediately upon component creation
-			handler(newValue) {
-				this.$nextTick(() => {
+      immediate: true,
+      handler(newValue) {
+        this.$nextTick(() => {
 					if (newValue) {
 						this.createSankey(newValue);
 					}
 				});
-			},
-		},
+      }
+    },
     // Configuration Options
 		taxaLimit() {
 			this.updateSankey();
@@ -153,6 +109,31 @@ export default {
 		},
   },
   methods: {
+    filteredData(allData) {
+      // Reference dependencies explicitly
+      const minCladeReadsMode = this.minCladeReadsMode;
+      const minReads = this.minReads;
+      const showAll = this.showAll;
+
+      // Filter data based on configurations
+      if (this.showAll) {
+        return allData;
+      }
+
+      if (!allData) {
+        return [];
+      }
+
+      return allData.filter((entry) => {
+        let passesMinReads = false;
+        if (this.minCladeReadsMode === "%") {
+          passesMinReads = parseFloat(entry.proportion) >= this.minReads;
+        } else if (minCladeReadsMode === "#") {
+          passesMinReads = parseFloat(entry.clade_reads) >= this.minReads;
+        }
+        return passesMinReads;
+      });
+    },
     parseData(data, isFullGraph = false) {
 			const selectedNodes = [];
 			const allNodes = [];
@@ -165,7 +146,6 @@ export default {
 
 			let rootNode = null;
 			let unclassifiedNode = null;
-
 			/*
 			Step 1: Create nodes and save lineage data for all nodes
 			*/
@@ -264,7 +244,7 @@ export default {
 					allNodes.push(...nodesByRank[rank]);
 
 					// Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
-					const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : this.taxaLimit);
+					const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, !this.taxaLimit ? nodesByRank[rank].length : this.taxaLimit); // Show all when taxaLimit === 0
 					selectedNodes.push(...topNodes);
 				}
 			});
@@ -339,8 +319,15 @@ export default {
 			return parseInt(node.taxon_id) === 0;
 		},
     // Main function for drawing Sankey
-		createSankey() {
-			const { nodes, links } = this.graphData;
+		createSankey(fileContent) {
+      // Data processing
+      const jsonData = TSVParser.tsvToJSON(fileContent).results;
+
+      // Filter data based on min read criteria after parsing
+      const filteredData = this.filteredData(jsonData);
+
+
+			const { nodes, links } = this.parseData(filteredData); // Convert to graph data format for d3.js
 
 			// Check if nodes and links are not empty
 			if (!nodes.length || !links.length) {
@@ -367,7 +354,6 @@ export default {
 				.attr("viewBox", `0 0 ${width} ${height+marginBottom}`)
 				.attr("width", "100%")
 				.attr("height", height + marginBottom)
-				.attr("id", this.id) // Set the id based on the prop for download reference
 				.classed("hide", false); // FIXME: fix to svg
 
 			const sankeyGenerator = sankey()
@@ -610,7 +596,7 @@ export default {
 		async fetchSankey() {
 			await new Promise((resolve) => {
 				setTimeout(() => {
-					this.createSankey(); // Create the Sankey diagram immediately after getting data
+					this.createSankey(this.rawData); // Create the Sankey diagram immediately after getting data
 					resolve();
 				}, 50); // Immediate execution after fetching data
 			});
@@ -642,8 +628,6 @@ export default {
   async mounted() {
 		// Listener for screen resizing event
 		window.addEventListener("resize", this.updateDiagramWidth);
-
-		await this.updateSankey();
 	},
 	beforeUnmount() {
 		window.removeEventListener("resize", this.updateDiagramWidth);
