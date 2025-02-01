@@ -25,7 +25,7 @@
 ## Features
 
 - **Raw Kraken Report Parsing**: Accepts raw Kraken report data as input, eliminating the need for manual data formatting.
-- **Customizable Sankey Diagrams**: Configure diagram settings such as the number of taxa, filtering thresholds, label options, and dimensions.
+- **Customizable Sankey Diagrams**: Configure diagram settings such as the number of taxa displayed per rank, filtering thresholds, label options, and dimensions.
 - **Easy Integration**: Simple installation and usage with Vue.js.
 - **Interactive Visualizations**: Leverage D3.js for rich, dynamic diagrams.
 
@@ -79,10 +79,9 @@ export default {
     return {
       // Read the content of the Kraken report file
       fileContent: `
-        taxon_id	name	rank	clade_reads	taxon_reads	proportion
-        1	Root	no rank	10000	8000	100
-        2	CladeA	genus	5000	4000	50
-        3	CladeB	genus	5000	4000	50
+         5.9001         32656	32656	no rank	0	unclassified
+         94.0999	520822	4	no rank	1	root
+         90.8851	503029	0	superkingdom	10239	Viruses
       `,
     };
   },
@@ -127,7 +126,7 @@ The `rawData` prop must be a **string** containing raw Kraken report data. The f
 | Prop Name         | Type    | Required | Default    | Description                                                             |
 |-------------------|---------|----------|------------|-------------------------------------------------------------------------|
 | rawData           | String  | Yes      | N/A        | The raw Kraken report content as a string (no pre-processing required). |
-| taxaLimit         | Number  | Yes      | 10         | Maximum number of taxa to display in the Sankey diagram.                |
+| taxaLimit         | Number  | Yes      | 10         | Maximum number of taxa to display per rank in the Sankey diagram.                |
 | minCladeReadsMode | String  | Yes      | #          | Filtering mode: "#" for raw counts, "%" for proportions.                |
 | minReads          | Number  | Yes      | 1          | Minimum threshold for clade reads (based on minCladeReadsMode).         |
 | figureHeight      | Number  | Yes      | 600        | Height of the Sankey diagram in pixels.                                 |
