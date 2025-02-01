@@ -3,7 +3,7 @@
 	"author": "SunJae Lee <snjlee58@gmail.com>",
 	"productName": "Taxo Sankey",
 	"description": "A Vue.js plugin for creating interactive and customizable Sankey diagrams using D3, designed to visualize Kraken report data effectively.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": "./dist/taxoview.umd.js",
 	"module": "./dist/taxoview.es.js",
 	"exports": {
