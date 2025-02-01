@@ -1,4 +1,5 @@
-[![npm](https://img.shields.io/npm/v/taxoview.svg?color=brightgreen)](https://www.npmjs.com/package/taxoview)  
+[![npm](https://img.shields.io/npm/v/taxoview.svg?color=brightgreen)](https://www.npmjs.com/package/taxoview)  [![Vue 3](https://img.shields.io/badge/Vue-3.x-42b883?style=flat&logo=vue.js&logoColor=white)](https://vuejs.org/)  
+
 
 # TaxoView
 
