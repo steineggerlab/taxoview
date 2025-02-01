@@ -7,19 +7,15 @@
 1. [Features](#features)
 2. [Installation](#installation)
 3. [Usage](#usage)
-   - [1. Import and Use the Plugin](#1-import-and-use-the-plugin)
-   - [2. Add the `<SankeyDiagram>` Component](#2-add-the-sankeydiagram-component)
+    - [1. Import and Use the Plugin](#1-import-and-use-the-plugin)
+    - [2. Add the `<SankeyDiagram>` Component](#2-add-the-sankeydiagram-component)
 4. [Format of the `rawData`](#format-of-the-rawdata)
-   - [Example](#example)
-   - [Column Descriptions](#column-descriptions)
-   - [Important Notes](#important-notes)
+    - [Fields](#fields)
+    - [Important Notes](#important-notes)
+    - [Example](#example)
 5. [Props for `<SankeyDiagram>`](#props-for-sankeydiagram)
-6. [Example Project](#example-project)
-   - [File Structure](#1-file-structure)
-   - [App.vue](#2-appvue)
-7. [Development and Testing](#development-and-testing)
-8. [Contributing](#contributing)
-
+6. [Run the Example Project](#run-the-example-project)
+7. [Contributing](#contributing)
 
 
 ## Features
@@ -135,66 +131,18 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 | `labelOption`       | Number  | No      | 1 | Labeling option: 1 for proportion, 0 for clade_reads.                         |
 | `showAll`           | Boolean | No      | false      | Whether to show all taxa or apply filtering based on taxaLimit and minThreshold.         |
 
----
-## Example Project
-Here’s how to set up an example project to test the plugin:
-1. File Structure
-```
-example/
-├── App.vue
-├── main.js
-├── components/
-│   └── SankeyDiagram.vue
-├── package.json
-```
 
-2. App.vue
-```
-<template>
-  <div id="app">
-    <h1>TaxoView Example</h1>
-    <SankeyDiagram
-      :rawData="fileContent2"
-      :taxaLimit="15"
-      :minThresholdMode="'#'"
-      :minThreshold="2"
-      :figureHeight="1000"
-      :labelOption="'proportion'"
-      :showAll="false"
-    />
-  </div>
-</template>
+## Run the Example Project
 
-<script>
-export default {
-  data() {
-    return {
-      fileContent2: `
-        taxon_id	name	rank	clade_reads	taxon_reads	proportion
-        1	Root	no rank	10000	8000	100
-        2	CladeA	genus	5000	4000	50
-        3	CladeB	genus	5000	4000	50
-      `,
-    };
-  },
-};
-</script>
-```
+To quickly test TaxoView, clone this repo and run the example:
 
-## Development and Testing
-To set up the plugin locally for development and testing:
-
-1. Clone the repository and navigate to the project directory.
-2. Install dependencies:
-
-```
+```bash
+git clone https://github.com/your-username/taxoview.git
+cd taxoview/example
 npm install
-```
-
-3. Run the example project:
-```
 npm run dev
 ```
+This will launch a Vue app showcasing the plugin in action.
 
 ## Contributing
 Contributions are welcome! If you encounter issues or have feature requests, please open an issue or submit a pull request.
