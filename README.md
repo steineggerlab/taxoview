@@ -1,6 +1,6 @@
-# TaxoSankey
+# TaxoView
 
-**TaxoSankey** is a Vue.js plugin that generates interactive Sankey diagrams using Kraken report data. This plugin simplifies the process of visualizing taxonomic classification data by directly accepting raw Kraken report content without any pre-processing.
+**TaxoView** is a Vue.js plugin that generates interactive Sankey diagrams using Kraken report data. This plugin simplifies the process of visualizing taxonomic classification data by directly accepting raw Kraken report content without any pre-processing.
 
 ## Table of Contents
 
@@ -35,7 +35,7 @@
 You can install the plugin via npm:
 
 ```bash
-npm install taxosankey
+npm install taxoview
 ```
 
 ## Usage
@@ -47,14 +47,14 @@ To start using the plugin, import it and register it globally in your Vue.js app
 import { createApp } from "vue";
 import App from "./App.vue";
 
-// Import TaxoSankey plugin
-import TaxoSankey from "taxosankey";
+// Import TaxoView plugin
+import TaxoView from "taxoview";
 
 // Create Vue app
 const app = createApp(App);
 
 // Register the plugin globally
-app.use(TaxoSankey);
+app.use(TaxoView);
 
 app.mount("#app");
 ```
@@ -151,7 +151,7 @@ example/
 ```
 <template>
   <div id="app">
-    <h1>TaxoSankey Example</h1>
+    <h1>TaxoView Example</h1>
     <SankeyDiagram
       :rawData="fileContent2"
       :taxaLimit="15"
