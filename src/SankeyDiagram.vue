@@ -247,7 +247,7 @@ export default {
 					allNodes.push(...nodesByRank[rank]);
 
 					// Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
-					const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, !this.taxaLimit ? nodesByRank[rank].length : this.taxaLimit); // Show all when taxaLimit === 0
+					const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, this.showAll ? nodesByRank[rank].length : this.taxaLimit); // Show all when taxaLimit === 0
 					selectedNodes.push(...topNodes);
 				}
 			});
@@ -323,11 +323,11 @@ export default {
 		},
     // Main function for drawing Sankey
 		createSankey(fileContent) {
-      // Data processing
-      const jsonData = TSVParser.tsvToJSON(fileContent).results;
+			// Data processing
+			const jsonData = TSVParser.tsvToJSON(fileContent).results;
 
-      // Filter data based on min read criteria after parsing
-      const filteredData = this.filteredData(jsonData);
+			// Filter data based on min read criteria after parsing
+			const filteredData = this.filteredData(jsonData);
 
 
 			const { nodes, links } = this.parseData(filteredData); // Convert to graph data format for d3.js

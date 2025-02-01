@@ -5,7 +5,15 @@
 /dist
 
 # Example or demo directory
-/example
+# Ignore dependencies
+example/node_modules/
+example/package-lock.json
+
+# Ignore build outputs
+example/dist/
+
+# Ignore Vite cache
+example/.vite/
 
 # Logs
 npm-debug.log*
