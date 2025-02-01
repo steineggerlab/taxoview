@@ -40,6 +40,7 @@ npm install taxosankey
 
 ## Usage
 1. Import and Use the Plugin
+
 To start using the plugin, import it and register it globally in your Vue.js application.
 ```
 // main.js

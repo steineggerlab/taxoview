@@ -10,8 +10,8 @@ export default defineConfig({
 		lib: {
 			// The main entry point
 			entry: path.resolve(__dirname, "src/index.js"),
-			name: "TaxoSankey",
-			fileName: (format) => `taxosankey.${format}.js`,
+			name: "TaxoView",
+			fileName: (format) => `taxoview.${format}.js`,
 		},
 		rollupOptions: {
 			external: ["vue"],
