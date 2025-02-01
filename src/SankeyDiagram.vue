@@ -14,37 +14,42 @@ import TSVParser from "./tsvParser.js";
 export default {
   name: "SankeyDiagram",
   props: {
-
     rawData: {
       type: String,
       required: true
     },
 
     // Configuration Options
-		taxaLimit: {
-			type: Number,
-			required: true,
-		},
-		minCladeReadsMode: {
-			type: String,
-			required: true,
-		},
-		minReads: {
-			type: Number,
-			required: true,
-		},
-		figureHeight: {
-			type: Number,
-			required: true,
-		},
-		labelOption: {
-			type: String,
-			required: true,
-		},
-		showAll: {
-			type: Boolean,
-			required: true,
-		},
+	taxaLimit: {
+		type: Number,
+		default: 10,
+		required: false,
+	},
+	minThresholdMode: {
+		type: Number,
+		default: 1,
+		required: false,
+	},
+	minThreshold: {
+		type: Number,
+		default: 0.001,
+		required: false,
+	},
+	figureHeight: {
+		type: Number,
+		default: 700,
+		required: false,
+	},
+	labelOption: {
+		type: Number,
+		default: 1,
+		required: false,
+	},
+	showAll: {
+		type: Boolean,
+		default: false,
+		required: false,
+	},
   },
   data: () => ({
     parsedData: [], // Holds the parsed JSON data
@@ -92,29 +97,27 @@ export default {
       }
     },
     // Configuration Options
-		taxaLimit() {
-			this.updateSankey();
-		},
-    minCladeReadsMode() {
-			this.updateSankey();
-		},
-		minReads() {
-			this.updateSankey();
-		},
+	taxaLimit() {
+		this.updateSankey();
+	},
+    minThresholdMode() {
+		this.updateSankey();
+	},
+	minThreshold() {
+		this.updateSankey();
+	},
     figureHeight() {
-			this.updateSankey();
-		},
-		labelOption() {
-			this.updateSankey();
-		},
+		this.updateSankey();
+	},
+	labelOption() {
+		this.updateSankey();
+	},
+	showAll() {
+		this.updateSankey();
+	},
   },
   methods: {
     filteredData(allData) {
-      // Reference dependencies explicitly
-      const minCladeReadsMode = this.minCladeReadsMode;
-      const minReads = this.minReads;
-      const showAll = this.showAll;
-
       // Filter data based on configurations
       if (this.showAll) {
         return allData;
@@ -126,10 +129,10 @@ export default {
 
       return allData.filter((entry) => {
         let passesMinReads = false;
-        if (this.minCladeReadsMode === "%") {
-          passesMinReads = parseFloat(entry.proportion) >= this.minReads;
-        } else if (minCladeReadsMode === "#") {
-          passesMinReads = parseFloat(entry.clade_reads) >= this.minReads;
+        if (this.minThresholdMode === 1) {
+          passesMinReads = parseFloat(entry.proportion) >= this.minThreshold;
+        } else if (this.minThresholdMode === 0) {
+          passesMinReads = parseFloat(entry.clade_reads) >= this.minThreshold;
         }
         return passesMinReads;
       });
@@ -574,7 +577,7 @@ export default {
 				.style("font-weight", "normal")
         .style("font-family", "Arial, sans-serif") 
 				.style("fill", (d) => (d.isUnclassifiedNode ? unclassifiedLabelColor : "black"))
-				.text((d) => (this.labelOption === "proportion" ? this.formatProportion(d.proportion) : this.formatCladeReads(d.clade_reads)))
+				.text((d) => (this.labelOption === 1 ? this.formatProportion(d.proportion) : this.formatCladeReads(d.clade_reads)))
 				.style("cursor", "pointer");
 		},
 

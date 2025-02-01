@@ -24,10 +24,10 @@
 
 ## Features
 
-- **Raw Kraken Report Parsing**: Accepts raw Kraken report data as input, eliminating the need for manual data formatting.
-- **Customizable Sankey Diagrams**: Configure diagram settings such as the number of taxa displayed per rank, filtering thresholds, label options, and dimensions.
-- **Easy Integration**: Simple installation and usage with Vue.js.
-- **Interactive Visualizations**: Leverage D3.js for rich, dynamic diagrams.
+- **Easy Kraken Report Parsing**: Directly accepts raw Kraken report data, eliminating the need for manual formatting.
+- **Customizable Sankey Diagrams**: Fine-tune visualization settings such as the number of taxa displayed per rank, filtering of taxa based on read counts or percentages, label options, and figure dimensions.
+- **Easy Integration**: Simple installation and usage with Vue.js projects.
+- **Interactive Visualizations**: Hover over specific taxa to highlight lineage relationships and view detailed taxonomic information at a glance.
 
 
 ## Installation
@@ -39,7 +39,7 @@ npm install taxoview
 ```
 
 ## Usage
-1. Import and Use the Plugin
+1. Import and Register the Plugin
 
 To start using the plugin, import it and register it globally in your Vue.js application.
 ```
@@ -65,12 +65,12 @@ In your Vue component, use the `<SankeyDiagram>` component to render a Sankey di
 <template>
   <SankeyDiagram
     :rawData="fileContent"
-    :taxaLimit="15"
-    :minCladeReadsMode="'#'"
-    :minReads="2"
-    :figureHeight="1000"
-    :labelOption="'proportion'"
-    :showAll="false"
+    :taxaLimit=10
+    :minThresholdMode=1
+    :minThreshold=0.001
+    :figureHeight=700
+    :labelOption=1
+    :showAll=false
   />
 </template>
 
@@ -91,8 +91,25 @@ export default {
 ```
 ## Format of the `rawData`
 The `rawData` prop must be a **string** containing raw Kraken report data. The format is as follows:
+
+### Fields
+Fields must be **tab-separated,** and all fields in each feature line must contain a value otherwise they will be filtered out.
+1. `proportion` - Percentage or proportion of reads belonging to this taxon.
+2. `clade_reads` - Total number of reads for this taxon and all its descendants.
+3. `taxon_reads` - Number of reads assigned specifically to this taxon.
+4. `rank` - Taxonomic rank of the taxon *(superkingdom, kingdom, phylum, class, order, family, genus, species, no rank)*.
+5. `taxon_id` - NCBI Taxon ID for the taxon.
+6. `name` - Scientific name of the taxon.
+
+### Important Notes
+1. **No Headers**: The rawData string must not include a header row.
+2. **First Two Rows**:
+    - The first row must represent the *unclassified node* (Taxon ID 0).
+    - The second row must represent the *root node* (Taxon ID 1).
+
 ### Example
 ```
+# proportion  clade_reads taxon_reads rank taxon_id name // Don't have this header in your actual report file
 5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root
 90.8851	503029	0	superkingdom	10239	Viruses
@@ -105,34 +122,18 @@ The `rawData` prop must be a **string** containing raw Kraken report data. The f
 90.8108	502618	1	family	11118	Coronaviridae
 90.8101	502614	4	subfamily	2501931	Orthocoronavirinae
 ```
-### Column Description
-| Column            | Description                                                                        |
-|-------------------|------------------------------------------------------------------------------------|
-| 1st (percentage)  | Percentage or proportion of reads belonging to this taxon.                         |
-| 2nd (clade_reads) | Total number of reads for this taxon and all its descendants (clade reads).        |
-| 3rd (taxon_reads) | Number of reads assigned specifically to this taxon.                               |
-| 4th (rank)        | Taxonomic rank (e.g., superkingdom, kingdom, phylum, class, order, family, genus). |
-| 5th (taxon_id)    | NCBI Taxon ID for the taxon.                                                       |
-| 6th (name)        | Scientific name of the taxon.                                                      |
-
-### Important Notes
-1. No Headers: The rawData string must not include a header row.
-2. First Two Rows:
-    - The first row must represent the unclassified node (Taxon ID 0).
-    - The second row must represent the root node (Taxon ID 1).
-3. The file content must be tab-delimited (\t).
 
 
 ## Props for `<SankeyDiagram>`
 | Prop Name         | Type    | Required | Default    | Description                                                             |
 |-------------------|---------|----------|------------|-------------------------------------------------------------------------|
-| rawData           | String  | Yes      | N/A        | The raw Kraken report content as a string (no pre-processing required). |
-| taxaLimit         | Number  | Yes      | 10         | Maximum number of taxa to display per rank in the Sankey diagram.                |
-| minCladeReadsMode | String  | Yes      | #          | Filtering mode: "#" for raw counts, "%" for proportions.                |
-| minReads          | Number  | Yes      | 1          | Minimum threshold for clade reads (based on minCladeReadsMode).         |
-| figureHeight      | Number  | Yes      | 600        | Height of the Sankey diagram in pixels.                                 |
-| labelOption       | String  | Yes      | proportion | Labeling option: "proportion" or "clade_reads".                         |
-| showAll           | Boolean | Yes      | false      | Whether to show all taxa or apply filtering based on taxaLimit.         |
+| `rawData`          | String  | Yes      | N/A        | The raw Kraken report content as a string (no pre-processing required). |
+| `taxaLimit`         | Number  | No      | 10         | Maximum number of taxa to display per rank in the Sankey diagram.                |
+| `minThresholdMode` | Number  | No      | 1          | Filtering mode: 1 for proportions, 0 for raw counts.                |
+| `minThreshold`          | Number  | No      | 0.001          | Minimum threshold for filtering taxa (based on minThresholdMode).         |
+| `figureHeight`      | Number  | No      | 700        | Height of the Sankey diagram in pixels.                                 |
+| `labelOption`       | Number  | No      | 1 | Labeling option: 1 for proportion, 0 for clade_reads.                         |
+| `showAll`           | Boolean | No      | false      | Whether to show all taxa or apply filtering based on taxaLimit and minThreshold.         |
 
 ---
 ## Example Project
@@ -155,8 +156,8 @@ example/
     <SankeyDiagram
       :rawData="fileContent2"
       :taxaLimit="15"
-      :minCladeReadsMode="'#'"
-      :minReads="2"
+      :minThresholdMode="'#'"
+      :minThreshold="2"
       :figureHeight="1000"
       :labelOption="'proportion'"
       :showAll="false"
