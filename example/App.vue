@@ -2,10 +2,10 @@
   <div style="margin: 2rem;">
     <h1>Sankey Plugin Demo</h1>
 
-    <!-- Create SankeyDiagram Component -->
-    <SankeyDiagram
-        :rawData="fileContent3"
-        :taxaLimit=15
+    <!-- Create TaxoView Component -->
+    <TaxoView
+        :rawData="fileContent2"
+        :taxaLimit=10
         :minThresholdMode=0
         :minThreshold=1
         :figureHeight=600

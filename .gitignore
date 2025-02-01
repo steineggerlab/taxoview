@@ -4,7 +4,7 @@
 # Build output
 /dist
 
-# Example or demo directory
+# Example project directory
 # Ignore dependencies
 example/node_modules/
 example/package-lock.json

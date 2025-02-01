@@ -12,7 +12,7 @@ import { sankeyRankColumns } from "./rankUtils.js";
 import TSVParser from "./tsvParser.js";
  
 export default {
-  name: "SankeyDiagram",
+  name: "TaxoView",
   props: {
     rawData: {
       type: String,

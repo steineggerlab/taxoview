@@ -2,28 +2,41 @@
 
 **TaxoView** is a Vue.js plugin that generates interactive Sankey diagrams using Kraken report data. This plugin simplifies the process of visualizing taxonomic classification data by directly accepting raw Kraken report content without any pre-processing.
 
-## Table of Contents
-
-1. [Features](#features)
-2. [Installation](#installation)
-3. [Usage](#usage)
-    - [1. Import and Use the Plugin](#1-import-and-use-the-plugin)
-    - [2. Add the `<SankeyDiagram>` Component](#2-add-the-sankeydiagram-component)
-4. [Format of the `rawData`](#format-of-the-rawdata)
-    - [Fields](#fields)
-    - [Important Notes](#important-notes)
-    - [Example](#example)
-5. [Props for `<SankeyDiagram>`](#props-for-sankeydiagram)
-6. [Run the Example Project](#run-the-example-project)
-7. [Contributing](#contributing)
-
-
 ## Features
 
 - **Easy Kraken Report Parsing**: Directly accepts raw Kraken report data, eliminating the need for manual formatting.
 - **Customizable Sankey Diagrams**: Fine-tune visualization settings such as the number of taxa displayed per rank, filtering of taxa based on read counts or percentages, label options, and figure dimensions.
 - **Easy Integration**: Simple installation and usage with Vue.js projects.
 - **Interactive Visualizations**: Hover over specific taxa to highlight lineage relationships and view detailed taxonomic information at a glance.
+
+
+## 🚀 Projects Using TaxoView  
+
+TaxoView has been integrated into various web applications and bioinformatics platforms. Here are some projects that use TaxoView:
+
+| Project Name | Description | 
+|-------------|------------|
+| **[Foldseek Server](https://search.foldseek.com/search)** | A web server offering fast and sensitive protein structure alignments against large-scale protein structure collections. | 
+| **[AFDB Clusters](https://cluster.foldseek.com/)** | A tool for clustering the AlphaFold Database (AFDB) to facilitate large-scale structural analysis and exploration of protein relationships. | 
+| **[Metabuli App](https://github.com/steineggerlab/Metabuli-App)** | A desktop application for metagenomic classification, enabling joint analysis of both DNA and amino acid sequences for taxonomic profiling. | 
+
+
+<!-- If you're using **TaxoView** in your project and would like to be featured, please submit a pull request or contact us! -->
+
+
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Usage](#usage)
+    - [1. Import and Use the Plugin](#1-import-and-use-the-plugin)
+    - [2. Add the `<TaxoView>` Component](#2-add-the-taxoview-component)
+3. [Format of the `rawData`](#format-of-the-rawdata)
+    - [Fields](#fields)
+    - [Important Notes](#important-notes)
+    - [Example](#example)
+4. [Props for `<TaxoView>`](#props-for-taxoview)
+5. [Run the Example Project](#run-the-example-project)
+6. [Contributing](#contributing)
 
 
 ## Installation
@@ -55,11 +68,11 @@ app.use(TaxoView);
 app.mount("#app");
 ```
 
-2. Add the `<SankeyDiagram>` Component
-In your Vue component, use the `<SankeyDiagram>` component to render a Sankey diagram.
+2. Add the `<TaxoView>` Component
+In your Vue component, use the `<TaxoView>` component to render a Sankey diagram.
 ```
 <template>
-  <SankeyDiagram
+  <TaxoView
     :rawData="fileContent"
     :taxaLimit=10
     :minThresholdMode=1
@@ -120,7 +133,7 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 ```
 
 
-## Props for `<SankeyDiagram>`
+## Props for `<TaxoView>`
 | Prop Name         | Type    | Required | Default    | Description                                                             |
 |-------------------|---------|----------|------------|-------------------------------------------------------------------------|
 | `rawData`          | String  | Yes      | N/A        | The raw Kraken report content as a string (no pre-processing required). |
@@ -134,7 +147,18 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 
 ## Run the Example Project
 
-To quickly test TaxoView, clone this repo and run the example:
+To test **TaxoView** in a real Vue project, clone this repository and run the example:
+
+### **🔹 Prerequisites**  
+Before running the example, ensure you have the following installed:  
+- **[Node.js (LTS recommended)](https://nodejs.org/)** (comes with npm)  
+- **Vue 3+** (must be installed separately)  
+- **Vite** (installed automatically via `npm install`)  
+
+### **🔹 Run the Example**  
+Clone the repository and start the example project:  
+
+
 
 ```bash
 git clone https://github.com/your-username/taxoview.git
@@ -142,9 +166,19 @@ cd taxoview/example
 npm install
 npm run dev
 ```
-This will launch a Vue app showcasing the plugin in action.
+This will launch a local development server with hot-reloading.
+
+### **🔹 Note**  
+If you get a warning about missing Vue, install it manually:
+```
+npm install vue
+```
 
 ## Contributing
 Contributions are welcome! If you encounter issues or have feature requests, please open an issue or submit a pull request.
+
+## Acknowledgements
+TaxoView is built using **[D3.js](https://d3js.org/)**, a powerful JavaScript library for creating data-driven visualizations.  
+Special thanks to the **D3 community** for their contributions to open-source visualization tools.  
 
 

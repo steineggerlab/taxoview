@@ -1,9 +1,9 @@
-import SankeyDiagram from "./SankeyDiagram.vue";
+import TaxoView from "./TaxoView.vue";
 
 export default {
 	install: (app, options = {}) => {
 
 		// Register component
-		app.component("SankeyDiagram", SankeyDiagram);
+		app.component("TaxoView", TaxoView);
 	},
 };
