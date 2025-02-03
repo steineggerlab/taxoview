@@ -5,6 +5,8 @@
 
 **TaxoView** is a Vue.js plugin that generates interactive Sankey diagrams using Kraken report data. This plugin simplifies the process of visualizing taxonomic classification data by directly accepting raw Kraken report content without any pre-processing.
 
+<img width="952" alt="image" src="https://github.com/user-attachments/assets/202f0cd2-632e-4836-a0cf-ccfb011112f4" />
+
 ## ✨ Features
 
 - **Easy Kraken Report Parsing**: Directly accepts raw Kraken report data, eliminating the need for manual formatting.
