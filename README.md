@@ -113,7 +113,7 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 3. `taxon_reads` - Number of reads assigned specifically to this taxon.
 4. `rank` - Taxonomic rank of the taxon *(superkingdom, kingdom, phylum, class, order, family, genus, species, no rank)*.
 5. `taxon_id` - NCBI Taxon ID for the taxon.
-6. `name` - Scientific name of the taxon.
+6. `name` - Scientific name of the taxon. *Must include the leading whitespaces as provided in the Kraken report*.
 
 ### Important Notes
 1. **No Headers**: The rawData string must not include a header row.
