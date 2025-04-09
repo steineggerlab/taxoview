@@ -33,10 +33,9 @@ export function TaxoView() {
         minThreshold: 0.001,
         labelOption: 1,
         showAll: false,
-        rankList: [
-            "no rank", "superkingdom", "kingdom", "phylum", "class",
-            "order", "family", "genus", "species"
-        ],
+        // superkingdom --> domain
+        rankList: sankeyRankColumns,
+        rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
         colorScheme: [
             // Autum colours
             "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
@@ -202,7 +201,7 @@ export function TaxoView() {
                 allNodes.push(...nodesByRank[rank]);
 
                 // Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
-                const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, config.showAll ? nodesByRank[rank].length : config.taxaLimit); // Show all when taxaLimit === 0
+                const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : config.taxaLimit);
                 selectedNodes.push(...topNodes);
             }
         });
@@ -232,8 +231,8 @@ export function TaxoView() {
                 }
             });
         }
-        generateLinks(selectedNodes, selectedLinks, config.rankList);
-        generateLinks(allNodes, allLinks, config.rankList); 
+        generateLinks(selectedNodes, selectedLinks, config.rankListWithRoot);
+        generateLinks(allNodes, allLinks, config.rankListWithRoot); 
         
         if (unclassifiedNode && rootNode) { // FIXME: remove rootNode if unneeded
             // Add to selected and all nodes (always present, excluded from taxa limit)
@@ -256,8 +255,9 @@ export function TaxoView() {
             // 	value: totalUnclassifiedCladeReads,
             // });
         // }
-        }        
-
+        }
+        console.log(selectedNodes)
+        
         return { nodes: selectedNodes, links: selectedLinks };
     }
     
@@ -340,8 +340,8 @@ export function TaxoView() {
         const unclassifiedLabelColor = "#696B7E";
 
         // Manually adjust nodes position to align by rank
-        const columnWidth = (config.width - config.marginRight) / config.rankList.length;
-        const columnMap = config.rankList.reduce((acc, rank, index) => {
+        const columnWidth = (config.width - config.marginRight) / config.rankListWithRoot.length;
+        const columnMap = config.rankListWithRoot.reduce((acc, rank, index) => {
             const leftMargin = 10;
             acc[rank] = index * columnWidth + leftMargin;
             return acc;
@@ -362,14 +362,14 @@ export function TaxoView() {
         svg
             .append("g")
             .selectAll("text")
-            .data(config.rankList)
+            .data(config.rankListWithRoot)
             .enter()
             .append("text")
             .attr("x", (rank) => columnMap[rank] + sankeyGenerator.nodeWidth() / 2)
             .attr("y", config.height + config.marginBottom / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-    .style("font-family", "Arial, sans-serif") 
+            .style("font-family", "Arial, sans-serif") 
             .text((rank, index) => rankLabels[index]);
 
         // Draw rank label divider link
@@ -533,7 +533,9 @@ export function TaxoView() {
             .style("font-weight", "normal")
             .style("font-family", "Arial, sans-serif") 
             .style("fill", (d) => (d.isUnclassifiedNode ? unclassifiedLabelColor : "black"))
-            .text((d) => (config.labelOption === 1 ? formatProportion(d.proportion) : formatCladeReads(d.clade_reads)))
+            .text((d) => (config.labelOption === 1
+                ? formatProportion(d.proportion)
+                : formatCladeReads(d.clade_reads)))
             .style("cursor", "pointer");
     }
 
