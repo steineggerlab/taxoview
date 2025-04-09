@@ -1,0 +1,211 @@
+0.00	0	0	no rank	0	unclassified
+100.00	179	0	no rank	1	root
+0.00	179	0	cellular root	131567	cellular organisms
+0.00	179	0	domain	2759	  Eukaryota
+0.00	179	0	clade	33154	    Opisthokonta
+0.00	179	0	kingdom	4751	      Fungi
+0.00	179	0	subkingdom	451864	        Dikarya
+0.00	179	0	phylum	4890	          Ascomycota
+0.00	179	0	clade	716545	            saccharomyceta
+0.00	179	0	subphylum	147538	              Pezizomycotina
+0.00	179	0	clade	716546	                leotiomyceta
+0.00	41	0	class	147545	                  Eurotiomycetes
+0.00	41	0	subclass	451871	                    Eurotiomycetidae
+0.00	41	0	order	5042	                      Eurotiales
+0.00	33	0	family	1131492	                        Aspergillaceae
+0.00	16	0	genus	5052	                          Aspergillus
+0.56	1	1	species	1220207	                            Aspergillus puulaauensis
+0.00	11	0	subgenus	2720871	                            Aspergillus subgen. Circumdati
+2.23	4	4	species	209559	                              Aspergillus alliaceus
+0.56	1	1	species	1226010	                              Aspergillus bertholletiae
+0.56	4	1	species	1069201	                              Aspergillus luchuensis
+0.56	1	1	strain	1137211	                                Aspergillus luchuensis CBS 106.47
+1.12	2	2	strain	1033177	                                Aspergillus luchuensis IFO 4308
+0.00	1	0	species	319630	                              Aspergillus piperis
+0.56	1	1	strain	1448313	                                Aspergillus piperis CBS 112811
+0.56	1	1	species	1220188	                              Aspergillus tanneri
+0.00	4	0	subgenus	2720870	                            Aspergillus subgen. Nidulantes
+0.56	1	1	species	41759	                              Aspergillus multicolor
+0.56	1	1	species	1810919	                              Aspergillus mulundensis
+0.56	2	1	species	46472	                              Aspergillus versicolor
+0.56	1	1	strain	1036611	                                Aspergillus versicolor CBS 583.65
+0.00	17	0	genus	5073	                          Penicillium
+1.12	2	2	species	116970	                            Penicillium angulare
+0.56	1	1	species	5075	                            Penicillium camemberti
+0.56	1	1	species	1882269	                            Penicillium fimorum
+0.56	1	1	species	3151616	                            Penicillium frequentans
+0.56	1	1	species	70099	                            Penicillium lividum
+1.12	2	2	species	1561947	                            Penicillium longicatenatum
+0.56	1	1	species	1167516	                            Penicillium odoratum
+0.56	1	1	species	1562058	                            Penicillium pulvis
+0.56	1	1	species	2972123	                            Penicillium tannophilum
+1.12	2	2	species	1562060	                            Penicillium verhagenii
+0.00	4	0	species	2593313	                            unclassified Penicillium
+1.12	2	2	species	290292	                              Penicillium occitanis (nom. inval.)
+0.56	1	1	species	3003415	                              Penicillium sp. IBT 16267x
+0.56	1	1	species	3003416	                              Penicillium sp. IBT 35674x
+0.00	8	0	family	28568	                        Trichocomaceae
+0.00	2	0	genus	1132856	                          Rasamsonia
+0.56	2	1	species	68825	                            Rasamsonia emersonii
+0.56	1	1	strain	1408163	                              Rasamsonia emersonii CBS 393.64
+0.00	6	0	genus	5094	                          Talaromyces
+0.00	6	0	section	2752537	                            Talaromyces sect. Talaromyces
+0.56	3	1	species	37727	                              Talaromyces marneffei
+1.12	2	2	strain	441960	                                Talaromyces marneffei ATCC 18224
+1.12	2	2	species	128442	                              Talaromyces pinophilus
+0.56	1	1	species	198730	                              Talaromyces verruculosus
+0.00	1	0	class	147547	                  Lecanoromycetes
+0.00	1	0	clade	1520881	                    OSLEUM clade
+0.00	1	0	subclass	388435	                      Lecanoromycetidae
+0.00	1	0	order	5197	                        Lecanorales
+0.00	1	0	suborder	157822	                          Lecanorineae
+0.00	1	0	family	78060	                            Parmeliaceae
+0.00	1	0	genus	112415	                              Letharia
+0.56	1	1	species	112416	                                Letharia columbiana
+0.00	85	0	clade	715962	                  dothideomyceta
+0.00	85	0	class	147541	                    Dothideomycetes
+0.00	80	0	subclass	451867	                      Dothideomycetidae
+0.00	78	0	order	5014	                        Dothideales
+0.00	78	0	family	1570301	                          Saccotheciaceae
+0.00	78	0	genus	5579	                            Aureobasidium
+7.26	13	13	species	46634	                              Aureobasidium melanogenum
+0.56	1	1	species	2773714	                              Aureobasidium mustum
+0.00	1	0	species	559561	                              Aureobasidium namibiae
+0.56	1	1	strain	1043004	                                Aureobasidium namibiae CBS 147.97
+27.37	50	49	species	5580	                              Aureobasidium pullulans
+0.56	1	1	strain	1043002	                                Aureobasidium pullulans EXF-150
+2.79	6	5	species	1042127	                              Aureobasidium subglaciale
+0.56	1	1	strain	1043005	                                Aureobasidium subglaciale EXF-2481
+0.56	1	1	species	2773716	                              Aureobasidium uvarum
+0.00	6	0	species	2647315	                              unclassified Aureobasidium
+0.56	1	1	species	2894284	                                Aureobasidium sp. EXF-10727
+0.56	1	1	species	2894285	                                Aureobasidium sp. EXF-10728
+0.56	1	1	species	2894281	                                Aureobasidium sp. EXF-12298
+0.56	1	1	species	2894282	                                Aureobasidium sp. EXF-12344
+0.56	1	1	species	2831173	                                Aureobasidium sp. EXF-3399
+0.56	1	1	species	2894283	                                Aureobasidium sp. EXF-3400
+0.00	2	0	order	2726947	                        Mycosphaerellales
+0.00	2	0	family	93133	                          Mycosphaerellaceae
+0.00	2	0	genus	29002	                            Cercospora
+0.56	1	1	species	84275	                              Cercospora kikuchii
+0.00	1	0	species	135779	                              Cercospora zeae-maydis
+0.56	1	1	strain	717836	                                Cercospora zeae-maydis SCOH1-5
+0.00	5	0	subclass	451868	                      Pleosporomycetidae
+0.00	5	0	order	92860	                        Pleosporales
+0.00	5	0	suborder	715340	                          Pleosporineae
+0.00	2	0	family	683158	                            Didymellaceae
+0.00	2	0	genus	104397	                              Epicoccum
+1.12	2	2	species	105696	                                Epicoccum nigrum
+0.00	1	0	family	34374	                            Leptosphaeriaceae
+0.00	1	0	genus	118259	                              Plenodomus
+0.56	1	1	species	301713	                                Plenodomus lindquistii
+0.00	2	0	family	5020	                            Phaeosphaeriaceae
+0.00	2	0	genus	45294	                              Ophiobolus
+1.12	2	2	species	1469910	                                Ophiobolus disseminans
+0.00	52	0	clade	715989	                  sordariomyceta
+0.00	14	0	class	147548	                    Leotiomycetes
+0.00	6	0	order	5178	                      Helotiales
+0.00	1	0	family	76657	                        Dermateaceae
+0.00	1	0	genus	453209	                          Coleophoma
+0.56	1	1	species	565419	                            Coleophoma crateriformis
+0.00	1	0	family	47743	                        Hyaloscyphaceae
+0.00	1	0	genus	47747	                          Hyaloscypha
+0.00	1	0	species	186449	                            Hyaloscypha hepaticicola/Rhizoscyphus ericae species complex
+0.56	1	1	species	2082293	                              Hyaloscypha hepaticicola
+0.00	1	0	family	2907103	                        Hyphodiscaceae
+0.00	1	0	genus	353541	                          Hyphodiscus
+0.56	1	1	species	353542	                            Hyphodiscus hymeniophilus
+0.00	1	0	family	2656784	                        Pleuroascaceae
+0.00	1	0	genus	2656786	                          Venustampulla
+0.56	1	1	species	2656787	                            Venustampulla echinocandica
+0.00	2	0	family	2907192	                        Tricladiaceae
+0.00	1	0	genus	1432242	                          Halenospora
+0.56	1	1	species	394676	                            Halenospora varia
+0.00	1	0	genus	223899	                          Tricladium
+0.56	1	1	species	2075069	                            Tricladium varicosporioides
+0.00	8	0	order	292491	                      Thelebolales
+0.00	8	0	family	46451	                        Thelebolaceae
+0.00	8	0	genus	78156	                          Pseudogymnoascus
+0.56	1	1	species	342668	                            Pseudogymnoascus verrucosus
+0.00	7	0	species	2637121	                            unclassified Pseudogymnoascus
+0.56	1	1	species	1622149	                              Pseudogymnoascus sp. 05NY08
+0.56	1	1	species	1622150	                              Pseudogymnoascus sp. 24MN13
+0.56	1	1	species	1420912	                              Pseudogymnoascus sp. VKM F-103
+0.56	1	1	species	1420913	                              Pseudogymnoascus sp. VKM F-4518 (FW-2643)
+0.56	1	1	species	1420914	                              Pseudogymnoascus sp. VKM F-4519 (FW-2642)
+0.56	1	1	species	1420915	                              Pseudogymnoascus sp. VKM F-4520 (FW-2644)
+0.56	1	1	species	1622147	                              Pseudogymnoascus sp. WSF 3629
+0.00	38	0	class	147550	                    Sordariomycetes
+0.00	2	0	subclass	222543	                      Hypocreomycetidae
+0.00	2	0	order	5125	                        Hypocreales
+0.00	1	0	family	34397	                          Clavicipitaceae
+0.00	1	0	clade	2940282	                            Clavicipitaceae incertae sedis
+0.00	1	0	clade	2940446	                              'Torrubiella' clade
+0.56	1	1	species	1531966	                                [Torrubiella] hemipterigena
+0.00	1	0	family	474942	                          Ophiocordycipitaceae
+0.00	1	0	genus	42367	                            Hirsutella
+0.00	1	0	species	332947	                              Hirsutella minnesotensis
+0.56	1	1	strain	1043627	                                Hirsutella minnesotensis 3608
+0.00	3	0	subclass	222544	                      Sordariomycetidae
+0.00	1	0	order	5114	                        Diaporthales
+0.00	1	0	family	5117	                          Cytosporaceae
+0.00	1	0	genus	117544	                            Cytospora
+0.56	1	1	species	578113	                              Cytospora mali
+0.00	2	0	order	5139	                        Sordariales
+0.00	2	0	family	42302	                          Lasiosphaeriaceae
+0.00	1	0	genus	42303	                            Cercophora
+0.56	1	1	species	92897	                              Cercophora newfieldiana
+0.00	1	0	genus	260669	                            Lasiosphaeris
+0.56	1	1	species	260670	                              Lasiosphaeris hirsuta
+0.00	33	0	subclass	222545	                      Xylariomycetidae
+0.00	9	0	order	3402561	                        Amphisphaeriales
+0.00	6	0	family	106263	                          Apiosporaceae
+0.00	6	0	genus	1811811	                            Apiospora
+1.12	2	2	species	1337665	                              Apiospora kogelbergensis
+1.12	2	2	species	335849	                              Apiospora marii
+1.12	2	2	species	335842	                              Apiospora saccharicola
+0.00	1	0	family	1812770	                          Pseudomassariaceae
+0.00	1	0	genus	1812772	                            Pseudomassariella
+0.56	1	1	species	1141098	                              Pseudomassariella vexata
+0.00	2	0	family	1812776	                          Sporocadaceae
+0.00	2	0	genus	1562158	                            Neopestalotiopsis
+0.56	1	1	species	289240	                              Neopestalotiopsis clavispora
+0.00	1	0	species	2608710	                              unclassified Neopestalotiopsis
+0.56	1	1	species	2572875	                                Neopestalotiopsis sp. 37M
+0.00	24	0	order	37989	                        Xylariales
+0.00	17	0	family	2033035	                          Hypoxylaceae
+0.00	7	0	genus	326606	                            Annulohypoxylon
+0.00	1	0	species	326616	                              Annulohypoxylon bovei
+0.56	1	1	varietas	326617	                                Annulohypoxylon bovei var. microspora
+0.56	1	1	species	1927788	                              Annulohypoxylon maeteangense
+0.56	1	1	species	326622	                              Annulohypoxylon moriforme
+0.56	1	1	species	326626	                              Annulohypoxylon nitens
+0.56	1	1	species	326628	                              Annulohypoxylon stygium
+0.56	1	1	species	327061	                              Annulohypoxylon truncatum
+0.00	1	0	species	2647192	                              unclassified Annulohypoxylon
+0.56	1	1	species	2857486	                                Annulohypoxylon sp. FPYF3050
+0.00	8	0	genus	42308	                            Hypoxylon
+0.56	1	1	species	326657	                              Hypoxylon crocopeplum
+0.00	7	0	species	2614581	                              unclassified Hypoxylon
+0.56	1	1	species	1001938	                                Hypoxylon sp. CO27-5
+0.56	1	1	species	1001937	                                Hypoxylon sp. EC38
+0.56	1	1	species	2614586	                                Hypoxylon sp. FL0543
+0.56	1	1	species	2614585	                                Hypoxylon sp. FL0890
+0.56	1	1	species	2614582	                                Hypoxylon sp. FL1857
+0.56	1	1	species	2614607	                                Hypoxylon sp. NC0597
+0.56	1	1	species	2663366	                                Hypoxylon sp. NC1633
+0.00	1	0	genus	2033036	                            Jackrogersella
+0.56	1	1	species	1955266	                              Jackrogersella minutella
+0.00	1	0	genus	742313	                            Rostrohypoxylon
+0.56	1	1	species	392036	                              Rostrohypoxylon terebratum
+0.00	7	0	family	37990	                          Xylariaceae
+0.00	1	0	genus	190942	                            Astrocystis
+0.56	1	1	species	743114	                              Astrocystis sublimbata
+0.00	2	0	genus	109374	                            Nemania
+1.12	2	2	species	109381	                              Nemania serpens
+0.00	1	0	genus	101474	                            Poronia
+0.56	1	1	species	101475	                              Poronia punctata
+0.00	3	0	genus	37991	                            Xylaria
+0.56	1	1	species	114814	                              Xylaria cubensis
+0.56	1	1	species	42375	                              Xylaria curta
+0.56	1	1	species	2512241	                              Xylaria flabelliformis
