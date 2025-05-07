@@ -1,16 +1,40 @@
 <template>
   <div style="margin: 2rem;">
+    <div class="settings-panel">
+      <div class="setting-panel">
+        <select class="setting-input" id="input-data" v-model="inputData" value="1">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+        </select>
+        <label for="input-data">{{ `Input data: fileContent${parseInt(inputData)}` }}</label>
+      </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="node-padding" type="range" v-model.number="nodePadding" value="13" min="1" max="20" />
+        <label for="node-padding">{{ `Node padding: ${nodePadding}` }}</label>
+      </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="figure-height" type="range" v-model.number="figureHeight" value="700" min="100" max="1500" />
+        <label for="figure-height">{{ `Figure height: ${figureHeight}` }}</label>
+      </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100" max="1500" />
+        <label for="figure-width">{{ `Figure width: ${figureWidth}` }}</label>
+      </div>
+    </div>
     <h1>Sankey Plugin Demo</h1>
 
     <!-- Create TaxoView Component -->
     <TaxoView
-        :rawData="fileContent2"
+        :rawData="usedData"
         :taxaLimit=10
         :minThresholdMode=0
         :minThreshold=1
-        :figureHeight=600
+        :figureHeight="figureHeight"
+        :figureWidth="figureWidth"
         :labelOption=1
         :showAll=false
+        :nodePadding="nodePadding"
     />
 
   </div>
@@ -19,9 +43,21 @@
 <script>
 export default {
   name: 'App',
+  computed: {
+    usedData: function() {
+      if (parseInt(this.inputData) === 1) return this.fileContent1;      
+      if (parseInt(this.inputData) === 2) return this.fileContent2;      
+      if (parseInt(this.inputData) === 3) return this.fileContent3;      
+      return this.fileContent1;      
+    }
+  },
   data() {
     return {
       // Sample File Content
+      nodePadding: 13,
+      figureHeight: 700,
+      figureWidth: 1100,
+      inputData: "1",
       fileContent1: `5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root
 90.8851	503029	0	superkingdom	10239	  Viruses
@@ -11674,5 +11710,14 @@ h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
   margin-bottom: 1rem;
+}
+
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.setting-input {
+  width: 100px;
 }
 </style>
