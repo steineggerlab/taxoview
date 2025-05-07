@@ -18,8 +18,7 @@ function createAccessors(chart, config) {
         });
 }
 
-export function TaxoView() {
-
+export default function TaxoView() {
     const config = {
         width: 800,
         height: 600,
@@ -256,7 +255,6 @@ export function TaxoView() {
             // });
         // }
         }
-        console.log(selectedNodes)
         
         return { nodes: selectedNodes, links: selectedLinks };
     }
@@ -292,13 +290,13 @@ export function TaxoView() {
         // Data processing
         // Filter data based on min read criteria after parsing
         const jsonData = TSVParser.tsvToJSON(fileContent).results;
-        console.log("jsonData", jsonData) 
+        // console.log("jsonData", jsonData) 
 
         const filteredData = filterData(jsonData);
-        console.log("filteredData", filteredData) 
+        // console.log("filteredData", filteredData) 
 
         const { nodes, links } = parseData(filteredData); // Convert to graph data format for d3.js
-        console.log("nodes/links", nodes, links)
+        // console.log("nodes/links", nodes, links)
 
         // Check if nodes and links are not empty
         if (!nodes.length || !links.length) {
