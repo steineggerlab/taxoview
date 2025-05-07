@@ -13,11 +13,10 @@
 		},
 		"./dist/style.css": "./dist/style.css"
 	},
-	"files": [
-		"dist"
-	],
+	"files": [ "dist" ],
 	"scripts": {
-		"build": "vite build"
+		"build": "vite build -c vite.config.js",
+		"buildchart": "vite build -c vite.config.chart.js"
 	},
 	"peerDependencies": {
 		"vue": "^3.0.0"
