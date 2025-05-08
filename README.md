@@ -5,6 +5,8 @@
 
 **TaxoView** is a Vue.js plugin that generates interactive Sankey diagrams using Kraken report data. This plugin simplifies the process of visualizing taxonomic classification data by directly accepting raw Kraken report content without any pre-processing.
 
+<img width="952" alt="image" src="https://github.com/user-attachments/assets/202f0cd2-632e-4836-a0cf-ccfb011112f4" />
+
 ## ✨ Features
 
 - **Easy Kraken Report Parsing**: Directly accepts raw Kraken report data, eliminating the need for manual formatting.
@@ -111,7 +113,7 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 3. `taxon_reads` - Number of reads assigned specifically to this taxon.
 4. `rank` - Taxonomic rank of the taxon *(superkingdom, kingdom, phylum, class, order, family, genus, species, no rank)*.
 5. `taxon_id` - NCBI Taxon ID for the taxon.
-6. `name` - Scientific name of the taxon.
+6. `name` - Scientific name of the taxon. *Must include the leading whitespaces as provided in the Kraken report*.
 
 ### Important Notes
 1. **No Headers**: The rawData string must not include a header row.
