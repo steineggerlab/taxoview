@@ -6,7 +6,13 @@ import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
 import { sankeyRankColumns } from "./rankUtils.js";
 import TSVParser from "./tsvParser.js";
+import './stylesheet.css';
 
+let chartId = 0;
+
+function generateChartId() {
+    return chartId++;
+}
 
 function createAccessors(chart, config) {
     Object.keys(config).forEach((key) => {
@@ -19,6 +25,7 @@ function createAccessors(chart, config) {
 }
 
 export default function TaxoView() {
+    const chartUniqueId = generateChartId();
     const config = {
         width: 800,
         height: 600,
@@ -43,6 +50,7 @@ export default function TaxoView() {
             "#E63400", "#8CB5B5", "#6C3400", "#FFA400", "#41222A",
             "#FFB27B", "#FFCD87", "#BC7576",
         ],
+        unclassifiedLabelColor: "#696B7E",
         cladeReadsLabel: "Clade Reads",
         data: null,
         searchQuery: null,
@@ -265,38 +273,33 @@ export default function TaxoView() {
 
         // If the query is empty, reset all nodes and links to full opacity
         if (!query) {
-            svg.selectAll("rect").style("opacity", 1);
-            svg.selectAll("path").style("opacity", 1);
-            svg.selectAll(".node-name").style("opacity", 1);
-            svg.selectAll(".clade-reads").style("opacity", 1);
+            svg.selectAll("rect").classed("lowlight-shape", false);
+            svg.selectAll("path").classed("lowlight-shape", false);
+            svg.selectAll("text.node").classed("lowlight-text", false);
+            svg.selectAll(".clade-reads").classed("lowlight-text", false);
             return;
         }
 
         // Iterate over nodes to find those that match the query
-        svg.selectAll(".node-group").each((d) => {
+        svg.selectAll(".node-group").each(d => {
             if (d.name.toLowerCase().includes(query.toLowerCase()) || d.taxon_id.startsWith(query)) {
                 config.searchQueryMatchNodes.add(d.id);
             }
         });
 
         // Set opacity for nodes and links
-        svg.selectAll("rect").style("opacity", (d) => (config.searchQueryMatchNodes.has(d.id) ? 1 : 0.2));
-        svg.selectAll("path").style("opacity", 0.2); // Gray all paths
-        svg.selectAll(".node-name").style("opacity", (d) => (config.searchQueryMatchNodes.has(d.id) ? 1 : 0.1));
-        svg.selectAll(".clade-reads").style("opacity", (d) => (config.searchQueryMatchNodes.has(d.id) ? 1 : 0.1));
+        svg.selectAll("rect").classed("lowlight-shape", d => !config.searchQueryMatchNodes.has(d.id));
+        svg.selectAll("path").classed("lowlight-shape", true); // Gray all paths
+        svg.selectAll("text.node").classed("lowlight-text", d => !config.searchQueryMatchNodes.has(d.id));
+        svg.selectAll(".clade-reads").classed("lowlight-text", d => !config.searchQueryMatchNodes.has(d.id));
     }
 
     function createSankey(fileContent) {
         // Data processing
         // Filter data based on min read criteria after parsing
         const jsonData = TSVParser.tsvToJSON(fileContent).results;
-        // console.log("jsonData", jsonData) 
-
         const filteredData = filterData(jsonData);
-        // console.log("filteredData", filteredData) 
-
         const { nodes, links } = parseData(filteredData); // Convert to graph data format for d3.js
-        // console.log("nodes/links", nodes, links)
 
         // Check if nodes and links are not empty
         if (!nodes.length || !links.length) {
@@ -335,7 +338,6 @@ export default function TaxoView() {
             links: links.map((d) => Object.assign({}, d)),
         });
         const color = d3.scaleOrdinal().range(config.colorScheme);
-        const unclassifiedLabelColor = "#696B7E";
 
         // Manually adjust nodes position to align by rank
         const columnWidth = (config.width - config.marginRight) / config.rankListWithRoot.length;
@@ -349,7 +351,7 @@ export default function TaxoView() {
         graph.nodes.forEach((node) => {
             node.x0 = columnMap[node.rank];
             node.x1 = node.x0 + sankeyGenerator.nodeWidth();
-            node.color = node.isUnclassifiedNode ? unclassifiedLabelColor : color(node.id);
+            node.color = node.isUnclassifiedNode ? config.unclassifiedLabelColor : color(node.id);
         });
 
         // Re-run the layout to ensure correct vertical positioning
@@ -361,14 +363,13 @@ export default function TaxoView() {
             .append("g")
             .selectAll("text")
             .data(config.rankListWithRoot)
-            .enter()
-            .append("text")
+            .join("text")
             .attr("x", (rank) => columnMap[rank] + sankeyGenerator.nodeWidth() / 2)
             .attr("y", config.height + config.marginBottom / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .style("font-family", "Arial, sans-serif") 
-            .text((rank, index) => rankLabels[index]);
+            .attr("class", "rank-label")
+            .text((_, index) => rankLabels[index]);
 
         // Draw rank label divider link
         svg
@@ -384,28 +385,26 @@ export default function TaxoView() {
         const highlightLineage = (node) => {
             const lineageIds = new Set(node.lineage.map((n) => n.id));
             lineageIds.add(node.id);
-            svg.selectAll("rect").style("opacity", (d) => (lineageIds.has(d.id) ? 1 : 0.2));
-            svg.selectAll("path").style("opacity", (d) => (lineageIds.has(d.source.id) && lineageIds.has(d.target.id) ? 1 : 0.2));
-            svg.selectAll(".node-name").style("opacity", (d) => (lineageIds.has(d.id) ? 1 : 0.1));
-            svg.selectAll(".clade-reads").style("opacity", (d) => (lineageIds.has(d.id) ? 1 : 0.1));
+            svg.selectAll("rect").classed("lowlight-shape", (d) => !lineageIds.has(d.id));
+            svg.selectAll("path").classed("lowlight-shape", (d) => !(lineageIds.has(d.source.id) && lineageIds.has(d.target.id)));
+            svg.selectAll("text.node").classed("lowlight-text", (d) => !(lineageIds.has(d.id)));
+            svg.selectAll(".clade-reads").classed("lowlight-text", (d) => !(lineageIds.has(d.id)));
         };
 
         // Function to reset highlight
         const resetHighlight = () => {
-            svg.selectAll("rect").style("opacity", 1);
-            svg.selectAll("path").style("opacity", 1);
-            svg.selectAll(".node-name").style("opacity", 1);
-            svg.selectAll(".clade-reads").style("opacity", 1);
+            svg.selectAll("rect").classed("lowlight-shape", false);
+            svg.selectAll("path").classed("lowlight-shape", false);
+            svg.selectAll("text.node").classed("lowlight-text", false);
+            svg.selectAll(".clade-reads").classed("lowlight-text", false);
         };
 
         // Define a clipping path for each link (crops out curve when links are too thick)
-        svg
-            .append("defs")
+        svg.append("defs")
             .selectAll("clipPath")
             .data(graph.links)
-            .enter()
-            .append("clipPath")
-            .attr("id", (d, i) => `clip-path-${i}`)
+            .join("clipPath")
+            .attr("id", (_, i) => `clip-path-${chartUniqueId}-${i}`)
             .append("rect")
             .attr("x", (d) => d.source.x1)
             .attr("y", 0)
@@ -413,26 +412,25 @@ export default function TaxoView() {
             .attr("height", config.height);
 
         // Add links
-        svg
+        const linkGroup = svg
             .append("g")
-            .attr("fill", "none")
-            .attr("stroke-opacity", 0.3)
-            .selectAll("path")
+            .attr("class", "link-group")
+
+        linkGroup.selectAll("path")
             .data(graph.links)
-            .enter()
-            .append("path")
+            .join("path")
+            .attr("class", "link-path")
             .attr("d", sankeyLinkHorizontal())
-            .attr("stroke", (d) => (d.target.isUnclassifiedNode ? unclassifiedLabelColor : d3.color(d.source.color))) // Set link color to source node color with reduced opacity
+            .attr("stroke", (d) => (d.target.isUnclassifiedNode ? config.unclassifiedLabelColor : d3.color(d.source.color))) // Set link color to source node color with reduced opacity
             .attr("stroke-width", (d) => Math.max(1, d.width))
-            .attr("clip-path", (d, i) => `url(#clip-path-${i})`);
+            .attr("clip-path", (_, i) => `url(#clip-path-${chartUniqueId}-${i})`);
 
         // Create node group (node + labels) and add mouse events
         const nodeGroup = svg
             .append("g")
             .selectAll(".node-group")
             .data(graph.nodes)
-            .enter()
-            .append("g")
+            .join("g")
             .attr("class", (d) => "node-group taxid-" + d.id)
             .attr("transform", (d) => `translate(${d.x0}, ${d.y0})`)
             .on("mouseover", (event, d) => {
@@ -440,34 +438,25 @@ export default function TaxoView() {
                     // If there's no search query, or if the node matches the search query, highlight
                     highlightLineage(d);
 
+                    const tooltipHTML = `
+                        <div class="tooltip-inner">
+                          ${d.type !== "unclassified" ? `<p class="tooltip-id">#${d.taxon_id}</p>` : ""}
+                          <div class="tooltip-header">
+                            <div>${d.name}</div>
+                            ${d.type !== "unclassified" ? `<span class="tooltip-badge">${d.rankDisplayName}</span>` : ""}
+                          </div>
+                          <hr>
+                          <div class="tooltip-row">
+                            <div class="tooltip-label">${config.cladeReadsLabel}</div>
+                            <div>${d.clade_reads}</div>
+                          </div>
+                        </div>
+                    `
                     // Append tooltip to the body
                     const tooltip = d3.select("body")
                         .append("div")
                         .attr("class", "tooltip")
-                        .style("position", "absolute")
-                        .style("background-color", "rgba(38, 50, 56, 0.95)")
-                        .style("color", "white")
-                        .style("font-family", "Arial, sans-serif") 
-                        .style("border-radius", "8px")
-                        .style("padding", "10px")
-                        .style("box-shadow", "0 2px 6px rgba(0, 0, 0, 0.1)")
-                        .style("opacity", 1)
-                        .html(`
-                            <div style="padding-top: 4px; padding-bottom: 4px; padding-left: 8px; padding-right: 8px;">
-                                ${d.type !== "unclassified" ? `<p style="font-size: 0.6rem; margin-bottom: 0px;">#${d.taxon_id}</p>` : ""}
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="font-weight: bold; font-size: 0.875rem;">${d.name}</div>
-                                    ${d.type !== "unclassified" ? `<span style="background-color: rgba(255, 167, 38, 0.25); color: #ffa726; 
-                                                                                font-weight: bold; padding: 4px 8px; border-radius: 12px; 
-                                                                                font-size: 0.875rem; margin-left: 10px;">${d.rankDisplayName}</span>` : ''}
-                                </div>
-                                <hr style="margin: 8px 0; border: none; border-top: 1px solid #fff; opacity: 0.2;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;">
-                                    <div style="font-weight: bold;">${config.cladeReadsLabel}</div>
-                                    <div style="margin-left: 10px;">${d.clade_reads}</div>
-                                </div>
-                            </div>
-                        `);
+                        .html(tooltipHTML);
 
                     // Position the tooltip
                     tooltip
@@ -492,15 +481,13 @@ export default function TaxoView() {
                 d3.select(".tooltip").remove();
             });
 
-
         // Create node rectangles
         nodeGroup
             .append("rect")
             .attr("width", (d) => d.x1 - d.x0)
             .attr("height", (d) => nodeHeight(d))
-            .attr("fill", (d) => (d.isUnclassifiedNode ? unclassifiedLabelColor : d.color))
-            .attr("class", (d) => "node taxid-" + d.id)
-            .style("cursor", "pointer");
+            .attr("class", (d) => `node taxid-${d.id}`)
+            .attr("fill", d => `${d.isUnclassifiedNode ? config.unclassifiedLabelColor : d.color}`);
 
         // Add node name labels next to node
         nodeGroup
@@ -512,29 +499,20 @@ export default function TaxoView() {
             .attr("dy", "0.35em")
             .attr("text-anchor", "start")
             .text((d) => d.name)
-            .style("font-size", "10px")
-            .style("font-weight", "normal")
-            .style("font-family", "Arial, sans-serif") 
-            .style("fill", (d) => (d.isUnclassifiedNode ? unclassifiedLabelColor : "black"))
-            .style("cursor", "pointer");
+            .attr("class", (d) => `node taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`);
 
         // Add label above node (proportion/clade reads)
         nodeGroup
             .append("text")
             .attr("id", (d) => `cladeReads-${d.id}`)
-            .attr("class", (d) => "clade-reads taxid-" + d.id)
+            .attr("class", (d) => `clade-reads taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`)
             .attr("x", (d) => (d.x1 - d.x0) / 2)            
             .attr("y", -5)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .style("font-size", "10px")
-            .style("font-weight", "normal")
-            .style("font-family", "Arial, sans-serif") 
-            .style("fill", (d) => (d.isUnclassifiedNode ? unclassifiedLabelColor : "black"))
             .text((d) => (config.labelOption === 1
                 ? formatProportion(d.proportion)
                 : formatCladeReads(d.clade_reads)))
-            .style("cursor", "pointer");
     }
 
     function chart(selection) {
@@ -543,7 +521,6 @@ export default function TaxoView() {
             createSankey(config.data);
         });
     }
-
 
     // Setters/getters for all configurables
     createAccessors(chart, config);

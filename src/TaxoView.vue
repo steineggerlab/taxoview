@@ -7,7 +7,7 @@ import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
 import { sankeyRankColumns } from "./rankUtils.js";
 import TSVParser from "./tsvParser.js";
-import { TaxoView } from "./TaxoView.js"
+import TaxoView from "./TaxoView.js"
 
 export default {
 	name: "TaxoView",
