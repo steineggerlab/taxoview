@@ -17,7 +17,8 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "vite build"
+		"build": "vite build -c vite.config.js",
+		"buildchart": "vite build -c vite.config.chart.js"
 	},
 	"peerDependencies": {
 		"vue": "^3.0.0"
@@ -25,6 +26,7 @@
 	"devDependencies": {
 		"@vitejs/plugin-vue": "^4.6.2",
 		"vite": "^4.5.9",
+		"vite-plugin-css-injected-by-js": "^3.5.2",
 		"vue": "^3.0.0"
 	},
 	"dependencies": {
