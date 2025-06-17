@@ -5,6 +5,17 @@
     /* Opacity for non-highlighted lineages */
     --lowlight-text-opacity: 0.1;
     --lowlight-shape-opacity: 0.2;
+    
+    /* Node text color and opacity for inter-node connecting paths */
+    --svg-text-color: black;
+    --svg-link-path-opacity: 0.3;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --svg-text-color: white;
+        --svg-link-path-opacity: 0.6;
+    }
 }
 
 .tooltip {
@@ -73,22 +84,26 @@ rect.node {
     cursor: pointer;
 }
 text.node {
-    font-size: 10px;
     font-weight: normal;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     cursor: pointer;
-    fill: black;
+    fill: var(--svg-text-color);
 }
 text.clade-reads {
-    font-size: 10px;
     font-weight: normal;
-    font-family: Arial, sans-serif; 
+    font-family: var(--font-family);
+    fill: var(--svg-text-color);
     cursor: pointer;
 }
 
 /* x-axis rank label */
 text.rank-label {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
+    fill: var(--svg-text-color);
+}
+
+line.rank-axis {
+    stroke: var(--svg-text-color);
 }
 
 /* non-highlighted lineages */
@@ -102,5 +117,5 @@ text.rank-label {
 /* Link <path> elements between nodes */
 .link-path {
     fill: none;
-    stroke-opacity: 0.3;
+    stroke-opacity: var(--svg-link-path-opacity);
 }

@@ -39,6 +39,9 @@ export default function TaxoView() {
         minThreshold: 0.001,
         labelOption: 1,
         showAll: false,
+        nodeLabelFontSize: 10,
+        nodeValueFontSize: 10,
+        rankLabelFontSize: 14,
         // superkingdom --> domain
         rankList: sankeyRankColumns,
         rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
@@ -360,20 +363,23 @@ export default function TaxoView() {
         // Add rank column labels
         const rankLabels = [" ", "D", "K", "P", "C", "O", "F", "G", "S"];
         svg
+            .text((_, index) => rankLabels[index])
             .append("g")
             .selectAll("text")
             .data(config.rankListWithRoot)
             .join("text")
+            .text((_, index) => rankLabels[index])
             .attr("x", (rank) => columnMap[rank] + sankeyGenerator.nodeWidth() / 2)
             .attr("y", config.height + config.marginBottom / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .attr("class", "rank-label")
-            .text((_, index) => rankLabels[index]);
+            .attr("font-size", `${config.rankLabelFontSize}px`);
 
         // Draw rank label divider link
         svg
             .append("line")
+            .classed("rank-axis", true)
             .attr("x1", 0)
             .attr("y1", config.height + 10)
             .attr("x2", config.width)
@@ -492,27 +498,29 @@ export default function TaxoView() {
         // Add node name labels next to node
         nodeGroup
             .append("text")
+            .text((d) => d.name)
             .attr("id", (d) => `nodeName-${d.id}`)
             .attr("class", (d) => "node-name taxid-" + d.id)
             .attr("x", (d) => d.x1 - d.x0 + 3)
             .attr("y", (d) => nodeHeight(d) / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", "start")
-            .text((d) => d.name)
-            .attr("class", (d) => `node taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`);
+            .attr("class", (d) => `node taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`)
+            .attr("font-size", `${config.nodeLabelFontSize}px`);
 
         // Add label above node (proportion/clade reads)
         nodeGroup
             .append("text")
+            .text((d) => (config.labelOption === 1
+                ? formatProportion(d.proportion)
+                : formatCladeReads(d.clade_reads)))
             .attr("id", (d) => `cladeReads-${d.id}`)
             .attr("class", (d) => `clade-reads taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`)
             .attr("x", (d) => (d.x1 - d.x0) / 2)            
             .attr("y", -5)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .text((d) => (config.labelOption === 1
-                ? formatProportion(d.proportion)
-                : formatCladeReads(d.clade_reads)))
+            .attr("font-size", `${config.nodeValueFontSize}px`);
     }
 
     function chart(selection) {

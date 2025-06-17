@@ -4,9 +4,7 @@
 
 <script>
 import * as d3 from "d3";
-import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
 import { sankeyRankColumns } from "./rankUtils.js";
-import TSVParser from "./tsvParser.js";
 import TaxoView from "./TaxoView.js"
 
 export default {
@@ -15,13 +13,15 @@ export default {
 		figureHeight: { type: Number, default: 700, required: false },
 		figureWidth: { type: Number, default: 1100, required: false },
 		labelOption: { type: Number, default: 1, required: false },
-		labelOption: { type: Number, default: 1, required: false },
 		marginBottom: { type: Number, default: 50, required: false },
 		marginRight: { type: Number, default: 150, required: false },
 		minThreshold: { type: Number, default: 0.001, required: false },
 		minThresholdMode: { type: Number, default: 1, required: false },
+		nodeLabelFontSize: { type: Number, default: 10, required: false },
+		nodeValueFontSize: { type: Number, default: 10, required: false },
 		nodePadding: { type: Number, default: 13, required: false },
 		nodeWidth: { type: Number, default: 20, required: false },
+		rankLabelFontSize: { type: Number, default: 14, required: false },
 		rawData: { type: String, required: true },
 		showAll: { type: Boolean, default: false, required: false },
 		taxaLimit: { type: Number, default: 10, required: false },
@@ -49,7 +49,9 @@ export default {
 		marginBottom: 'updateSankey',
 		marginRight: 'updateSankey',
 		nodeWidth: 'updateSankey',
-		nodePadding: 'updateSankey'
+		nodePadding: 'updateSankey',
+		nodeLabelFontSize: 'updateSankey',
+		nodeValueFontSize: 'updateSankey'
 	},
 	computed: {
 		chartFn() {
@@ -61,6 +63,8 @@ export default {
 				.marginRight(this.marginRight)
 				.nodeWidth(this.nodeWidth)
 				.nodePadding(this.nodePadding)
+				.nodeLabelFontSize(this.nodeLabelFontSize)
+				.nodeValueFontSize(this.nodeValueFontSize)
 				.rankList(this.sankeyRankColumns)
 				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
 				.colorScheme(this.colorScheme)
@@ -95,7 +99,6 @@ svg.hide {
 
 .node {
 	cursor: grab;
-
 }
 
 .node:active {
