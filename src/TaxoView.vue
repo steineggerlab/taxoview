@@ -26,16 +26,20 @@ export default {
 		showAll: { type: Boolean, default: false, required: false },
 		taxaLimit: { type: Number, default: 10, required: false },
         cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
+		colorScheme: {
+			type: Array,
+			default: () => ([
+				"#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73", "#F7E5BF", "#C87505",
+				"#F18E3F", "#E59579", "#C14C32", "#80003A", "#506432", "#FFC500", "#B30019",
+				"#EC410B", "#E63400", "#8CB5B5", "#6C3400", "#FFA400", "#41222A", "#FFB27B",
+				"#FFCD87", "#BC7576",
+			]),
+			validator: (arr) => Array.isArray(arr) && arr.every(color => typeof color === 'string' && CSS.supports('color', color))
+		}
 	},
 	data: () => ({
 		sankeyRankColumns,
 		sankeyRankColumnsWithRoot: ["no rank", ...sankeyRankColumns],
-		colorScheme: [
-			"#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73", "#F7E5BF", "#C87505",
-			"#F18E3F", "#E59579", "#C14C32", "#80003A", "#506432", "#FFC500", "#B30019",
-			"#EC410B", "#E63400", "#8CB5B5", "#6C3400", "#FFA400", "#41222A", "#FFB27B",
-			"#FFCD87", "#BC7576",
-		], // Define color scale (https://wondernote.org/color-palettes-for-web-digital-blog-graphic-design-with-hexadecimal-codes/)
 	}),
 	watch: {
 		rawData: 'updateSankey',
