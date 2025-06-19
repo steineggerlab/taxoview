@@ -83,8 +83,10 @@ In your Vue component, use the `<TaxoView>` component to render a Sankey diagram
     :minThresholdMode=1
     :minThreshold=0.001
     :figureHeight=700
+    :figureWidth=1100
     :labelOption=1
     :showAll=false
+    :nodePadding=13
   />
 </template>
 
@@ -145,9 +147,11 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 | `taxaLimit`         | Number  | No      | 10         | Maximum number of taxa to display per rank in the Sankey diagram.                |
 | `minThresholdMode` | Number  | No      | 1          | Filtering mode: 1 for proportions, 0 for raw counts.                |
 | `minThreshold`          | Number  | No      | 0.001          | Minimum threshold for filtering taxa (based on minThresholdMode).         |
-| `figureHeight`      | Number  | No      | 700        | Height of the Sankey diagram in pixels.                                 |
+| `figureHeight`      | Number  | No      | 600        | Height of the Sankey diagram in pixels.       
+| `figureWidth`      | Number  | No      | 800        | Width of the Sankey diagram in pixels.                              |
 | `labelOption`       | Number  | No      | 1 | Labeling option: 1 for proportion, 0 for clade_reads.                         |
 | `showAll`           | Boolean | No      | false      | Whether to show all taxa or apply filtering based on taxaLimit and minThreshold.         |
+| `nodePadding`           | Number | No      | 13      | Vertical padding between two adjacent nodes in the same column.         |
 
 
 ## 🚀 Run the Example Project
