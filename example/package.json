@@ -6,7 +6,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "taxoview": "^1.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
