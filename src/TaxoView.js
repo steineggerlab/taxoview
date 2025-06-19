@@ -302,7 +302,7 @@ export default function TaxoView() {
         // Filter data based on min read criteria after parsing
         const jsonData = TSVParser.tsvToJSON(fileContent).results;
         const filteredData = filterData(jsonData);
-        const { nodes, links } = parseData(filteredData); // Convert to graph data format for d3.js
+        const { nodes, links } = parseData(filteredData, config.showAll); // Convert to graph data format for d3.js
 
         // Check if nodes and links are not empty
         if (!nodes.length || !links.length) {

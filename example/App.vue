@@ -21,19 +21,27 @@
         <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100" max="1500" />
         <label for="figure-width">{{ `Figure width: ${figureWidth}` }}</label>
       </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="taxa-limit" type="range" v-model.number="taxaLimit" value="10" min="1" max="100" />
+        <label for="figure-width">{{ `Taxa limit: ${taxaLimit}` }}</label>
+      </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="show-all" type="checkbox" v-model.number="showAll" />
+        <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
+      </div>
     </div>
     <h1>Sankey Plugin Demo</h1>
 
     <!-- Create TaxoView Component -->
     <TaxoView
         :rawData="usedData"
-        :taxaLimit=10
+        :taxaLimit="taxaLimit"
+        :showAll="showAll"
         :minThresholdMode=0
         :minThreshold=1
         :figureHeight="figureHeight"
         :figureWidth="figureWidth"
         :labelOption=1
-        :showAll=false
         :nodePadding="nodePadding"
     />
 
@@ -54,6 +62,8 @@ export default {
   data() {
     return {
       // Sample File Content
+      showAll: false,
+      taxaLimit: 10,
       nodePadding: 13,
       figureHeight: 700,
       figureWidth: 1100,
