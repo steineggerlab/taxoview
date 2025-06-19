@@ -70,6 +70,7 @@ export default {
 				.colorScheme(this.colorScheme)
 				.labelOption(this.labelOption)
 				.taxaLimit(this.taxaLimit)
+				.showAll(this.showAll)
 				.data(this.rawData);
 		}
 	},
