@@ -69,6 +69,7 @@ export default {
 				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
 				.colorScheme(this.colorScheme)
 				.labelOption(this.labelOption)
+				.taxaLimit(this.taxaLimit)
 				.data(this.rawData);
 		}
 	},
