@@ -51,7 +51,8 @@ export default {
 		nodeWidth: 'updateSankey',
 		nodePadding: 'updateSankey',
 		nodeLabelFontSize: 'updateSankey',
-		nodeValueFontSize: 'updateSankey'
+		nodeValueFontSize: 'updateSankey',
+		rankLabelFontSize: 'updateSankey'
 	},
 	computed: {
 		chartFn() {
@@ -65,6 +66,7 @@ export default {
 				.nodePadding(this.nodePadding)
 				.nodeLabelFontSize(this.nodeLabelFontSize)
 				.nodeValueFontSize(this.nodeValueFontSize)
+				.rankLabelFontSize(this.rankLabelFontSize)
 				.rankList(this.sankeyRankColumns)
 				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
 				.colorScheme(this.colorScheme)
