@@ -6,8 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "vue": "^3.0.0",
-    "taxosankey": "file:.."
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "vite": "^4.5.0",
