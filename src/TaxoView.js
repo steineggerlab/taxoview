@@ -42,6 +42,12 @@ export default function TaxoView() {
         nodeLabelFontSize: 10,
         nodeValueFontSize: 10,
         rankLabelFontSize: 14,
+        lowlightTextOpacity: 0.2,
+        lowlightShapeOpacity: 0.1,
+        linkPathOpacity: 0.3,
+        fontWeight: 'normal',
+        fontFamily: 'Arial, sans-serif',
+        fontFill: 'black',
         // superkingdom --> domain
         rankList: sankeyRankColumns,
         rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
@@ -276,10 +282,10 @@ export default function TaxoView() {
 
         // If the query is empty, reset all nodes and links to full opacity
         if (!query) {
-            svg.selectAll("rect").classed("lowlight-shape", false);
-            svg.selectAll("path").classed("lowlight-shape", false);
-            svg.selectAll("text.node").classed("lowlight-text", false);
-            svg.selectAll(".clade-reads").classed("lowlight-text", false);
+            svg.selectAll("rect").style("opacity", config.lowlightShapeOpacity);
+            svg.selectAll("path").style("opacity", config.lowlightShapeOpacity);
+            svg.selectAll("text.node").style("opacity", config.lowlightTextOpacity);
+            svg.selectAll(".clade-reads").style("opacity", config.lowlightTextOpacity);
             return;
         }
 
@@ -291,10 +297,10 @@ export default function TaxoView() {
         });
 
         // Set opacity for nodes and links
-        svg.selectAll("rect").classed("lowlight-shape", d => !config.searchQueryMatchNodes.has(d.id));
-        svg.selectAll("path").classed("lowlight-shape", true); // Gray all paths
-        svg.selectAll("text.node").classed("lowlight-text", d => !config.searchQueryMatchNodes.has(d.id));
-        svg.selectAll(".clade-reads").classed("lowlight-text", d => !config.searchQueryMatchNodes.has(d.id));
+        svg.selectAll("rect").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightShapeOpacity);
+        svg.selectAll("path").style("opacity", config.lowlightShapeOpacity);
+        svg.selectAll("text.node").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightTextOpacity);
+        svg.selectAll(".clade-reads").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightTextOpacity);
     }
 
     function createSankey(fileContent) {
@@ -374,6 +380,8 @@ export default function TaxoView() {
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .attr("class", "rank-label")
+            .attr("font-weight", config.fontWeight)
+            .attr("font-family", config.fontFamily)
             .attr("font-size", `${config.rankLabelFontSize}px`);
 
         // Draw rank label divider link
@@ -384,25 +392,25 @@ export default function TaxoView() {
             .attr("y1", config.height + 10)
             .attr("x2", config.width)
             .attr("y2", config.height + 10)
-            .attr("stroke", "#000")
+            .attr("stroke", config.fontFill)
             .attr("stroke-width", 1);
 
         // Function to highlight lineage
         const highlightLineage = (node) => {
             const lineageIds = new Set(node.lineage.map((n) => n.id));
             lineageIds.add(node.id);
-            svg.selectAll("rect").classed("lowlight-shape", (d) => !lineageIds.has(d.id));
-            svg.selectAll("path").classed("lowlight-shape", (d) => !(lineageIds.has(d.source.id) && lineageIds.has(d.target.id)));
-            svg.selectAll("text.node").classed("lowlight-text", (d) => !(lineageIds.has(d.id)));
-            svg.selectAll(".clade-reads").classed("lowlight-text", (d) => !(lineageIds.has(d.id)));
+            svg.selectAll("rect").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightShapeOpacity);
+            svg.selectAll(".link-path").style("opacity", (d) => (lineageIds.has(d.source.id) && lineageIds.has(d.target.id)) ? config.linkPathOpacity : config.lowlightShapeOpacity);
+            svg.selectAll("text.node").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightTextOpacity);
+            svg.selectAll(".clade-reads").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightTextOpacity);
         };
 
         // Function to reset highlight
         const resetHighlight = () => {
-            svg.selectAll("rect").classed("lowlight-shape", false);
-            svg.selectAll("path").classed("lowlight-shape", false);
-            svg.selectAll("text.node").classed("lowlight-text", false);
-            svg.selectAll(".clade-reads").classed("lowlight-text", false);
+            svg.selectAll("rect").style("opacity", 1);
+            svg.selectAll(".link-path").style("opacity", config.linkPathOpacity);
+            svg.selectAll("text.node").style("opacity", 1);
+            svg.selectAll(".clade-reads").style("opacity", 1);
         };
 
         // Define a clipping path for each link (crops out curve when links are too thick)
@@ -427,6 +435,8 @@ export default function TaxoView() {
             .join("path")
             .attr("class", "link-path")
             .attr("d", sankeyLinkHorizontal())
+            .attr("fill", "none")
+            .attr("opacity", config.linkPathOpacity)
             .attr("stroke", (d) => (d.target.isUnclassifiedNode ? config.unclassifiedLabelColor : d3.color(d.source.color))) // Set link color to source node color with reduced opacity
             .attr("stroke-width", (d) => Math.max(1, d.width))
             .attr("clip-path", (_, i) => `url(#clip-path-${chartUniqueId}-${i})`);
@@ -437,7 +447,8 @@ export default function TaxoView() {
             .selectAll(".node-group")
             .data(graph.nodes)
             .join("g")
-            .attr("class", (d) => "node-group taxid-" + d.id)
+            .style("cursor", "pointer")
+            .attr("class", (d) => `node-group taxid-${d.id}`)
             .attr("transform", (d) => `translate(${d.x0}, ${d.y0})`)
             .on("mouseover", (event, d) => {
                 if (!config.searchQuery || config.searchQueryMatchNodes.has(d.id)) {
@@ -505,7 +516,10 @@ export default function TaxoView() {
             .attr("y", (d) => nodeHeight(d) / 2)
             .attr("dy", "0.35em")
             .attr("text-anchor", "start")
-            .attr("class", (d) => `node taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`)
+            .attr("class", (d) => `node taxid-${d.id}`)
+            .attr("fill", d => `${d.isUnclassifiedNode ? config.unclassifiedLabelColor : config.fontFill}`)
+            .attr("font-weight", config.fontWeight)
+            .attr("font-family", config.fontFamily)
             .attr("font-size", `${config.nodeLabelFontSize}px`);
 
         // Add label above node (proportion/clade reads)
@@ -515,14 +529,17 @@ export default function TaxoView() {
                 ? formatProportion(d.proportion)
                 : formatCladeReads(d.clade_reads)))
             .attr("id", (d) => `cladeReads-${d.id}`)
-            .attr("class", (d) => `clade-reads taxid-${d.id} ${d.isUnclassifiedNode ? 'unclassified' : ''}`)
+            .attr("class", (d) => `clade-reads taxid-${d.id}`)
+            .attr("fill", d => `${d.isUnclassifiedNode ? config.unclassifiedLabelColor : config.fontFill}`)
             .attr("x", (d) => (d.x1 - d.x0) / 2)            
             .attr("y", -5)
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
+            .attr("font-weight", config.fontWeight)
+            .attr("font-family", config.fontFamily)
             .attr("font-size", `${config.nodeValueFontSize}px`);
     }
-
+    
     function chart(selection) {
         selection.each(function() {
             selectionCache = d3.select(this);

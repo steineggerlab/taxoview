@@ -21,6 +21,12 @@ export default {
 		nodeValueFontSize: { type: Number, default: 10, required: false },
 		nodePadding: { type: Number, default: 13, required: false },
 		nodeWidth: { type: Number, default: 20, required: false },
+        lowlightTextOpacity: { type: Number, default: 0.1, required: false },
+        lowlightShapeOpacity: { type: Number, default: 0.1, required: false },
+        linkPathOpacity: { type: Number, default: 0.3, required: false },
+        fontWeight: { type: String, default: 'normal', required: false },
+        fontFamily: { type: String, default: 'Arial, sans-serif', required: false },
+        fontFill: { type: String, default: 'black', required: false },
 		rankLabelFontSize: { type: Number, default: 14, required: false },
 		rawData: { type: String, required: true },
 		showAll: { type: Boolean, default: false, required: false },
@@ -56,15 +62,27 @@ export default {
 		nodePadding: 'updateSankey',
 		nodeLabelFontSize: 'updateSankey',
 		nodeValueFontSize: 'updateSankey',
-		rankLabelFontSize: 'updateSankey'
+		rankLabelFontSize: 'updateSankey',
+		linkPathOpacity: 'updateSankey',
+		fontWeight: 'updateSankey',
+		fontFill: 'updateSankey',
+		fontFamily: 'updateSankey',
+		lowlightShapeOpacity: 'updateSankey',
+		lowlightTextOpacity: 'updateSankey',
 	},
 	computed: {
 		chartFn() {
 			return TaxoView()
 				.cladeReadsLabel(this.cladeReadsLabel)
 				.colorScheme(this.colorScheme)
+				.fontFamily(this.fontFamily)
+				.fontFill(this.fontFill)
+				.fontWeight(this.fontWeight)
 				.height(this.figureHeight)
 				.labelOption(this.labelOption)
+				.linkPathOpacity(this.linkPathOpacity)
+				.lowlightShapeOpacity(this.lowlightShapeOpacity)
+				.lowlightTextOpacity(this.lowlightTextOpacity)
 				.marginBottom(this.marginBottom)
 				.marginRight(this.marginRight)
 				.minThreshold(this.minThreshold)
