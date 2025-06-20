@@ -61,22 +61,24 @@ export default {
 	computed: {
 		chartFn() {
 			return TaxoView()
-				.width(this.figureWidth)
-				.height(this.figureHeight)
 				.cladeReadsLabel(this.cladeReadsLabel)
+				.colorScheme(this.colorScheme)
+				.height(this.figureHeight)
+				.labelOption(this.labelOption)
 				.marginBottom(this.marginBottom)
 				.marginRight(this.marginRight)
-				.nodeWidth(this.nodeWidth)
-				.nodePadding(this.nodePadding)
+				.minThreshold(this.minThreshold)
+				.minThresholdMode(this.minThresholdMode)
 				.nodeLabelFontSize(this.nodeLabelFontSize)
+				.nodePadding(this.nodePadding)
 				.nodeValueFontSize(this.nodeValueFontSize)
+				.nodeWidth(this.nodeWidth)
 				.rankLabelFontSize(this.rankLabelFontSize)
 				.rankList(this.sankeyRankColumns)
 				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
-				.colorScheme(this.colorScheme)
-				.labelOption(this.labelOption)
-				.taxaLimit(this.taxaLimit)
 				.showAll(this.showAll)
+				.taxaLimit(this.taxaLimit)
+				.width(this.figureWidth)
 				.data(this.rawData);
 		}
 	},
