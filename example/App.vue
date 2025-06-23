@@ -21,20 +21,36 @@
         <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100" max="1500" />
         <label for="figure-width">{{ `Figure width: ${figureWidth}` }}</label>
       </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="taxa-limit" type="range" v-model.number="taxaLimit" value="10" min="1" max="100" />
+        <label for="figure-width">{{ `Taxa limit: ${taxaLimit}` }}</label>
+      </div>
+      <div class="setting-panel">
+        <input class="setting-input" id="show-all" type="checkbox" v-model.number="showAll" />
+        <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
+      </div>
     </div>
     <h1>Sankey Plugin Demo</h1>
 
     <!-- Create TaxoView Component -->
     <TaxoView
         :rawData="usedData"
-        :taxaLimit=10
+        :taxaLimit="taxaLimit"
+        :showAll="showAll"
+        :fontFill="fontFill"
         :minThresholdMode=0
         :minThreshold=1
         :figureHeight="figureHeight"
         :figureWidth="figureWidth"
         :labelOption=1
-        :showAll=false
         :nodePadding="nodePadding"
+        :colorScheme="[
+          '#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000',
+          '#009E73', '#00BFC4', '#F564E3', '#B79F00', '#E69F00',
+          '#56B4E9', '#0072B2', '#D55E00', '#CC79A7', '#999999',
+          '#E15759', '#4E79A7', '#76B7B2', '#F28E2B', '#59A14F',
+          '#EDC948', '#B07AA1' 
+        ]"
     />
 
   </div>
@@ -51,10 +67,21 @@ export default {
       return this.fileContent1;      
     }
   },
+  mounted() {
+    const query = window.matchMedia('(prefers-color-scheme: dark)');
+    query.addEventListener('change', e => {
+      this.fontFill = e.matches ? 'white' : 'black';
+      this.linkPathOpacity = e.matches ? 0.6 : 0.3;
+    })
+  },
   data() {
     return {
       // Sample File Content
+      showAll: false,
+			fontFill: "black",
+      taxaLimit: 10,
       nodePadding: 13,
+      linkPathOpacity: 0.3,
       figureHeight: 700,
       figureWidth: 1100,
       inputData: "1",

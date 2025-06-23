@@ -1,21 +1,5 @@
 :root {
     --font-family: Arial, sans-serif;
-    --unclassifed-label-color: #696B7E;
-    
-    /* Opacity for non-highlighted lineages */
-    --lowlight-text-opacity: 0.1;
-    --lowlight-shape-opacity: 0.2;
-    
-    /* Node text color and opacity for inter-node connecting paths */
-    --svg-text-color: black;
-    --svg-link-path-opacity: 0.3;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --svg-text-color: white;
-        --svg-link-path-opacity: 0.6;
-    }
 }
 
 .tooltip {
@@ -71,51 +55,4 @@
   
 .tooltip .tooltip-label {
     font-weight: bold;
-}
-
-/* Node labels */
-.unclassified {
-    fill: var(--unclassifed-label-color);
-}
-g.node-group {
-    cursor: pointer;
-}
-rect.node {
-    cursor: pointer;
-}
-text.node {
-    font-weight: normal;
-    font-family: var(--font-family);
-    cursor: pointer;
-    fill: var(--svg-text-color);
-}
-text.clade-reads {
-    font-weight: normal;
-    font-family: var(--font-family);
-    fill: var(--svg-text-color);
-    cursor: pointer;
-}
-
-/* x-axis rank label */
-text.rank-label {
-    font-family: var(--font-family);
-    fill: var(--svg-text-color);
-}
-
-line.rank-axis {
-    stroke: var(--svg-text-color);
-}
-
-/* non-highlighted lineages */
-.lowlight-shape {
-    opacity: var(--lowlight-shape-opacity);
-}
-.lowlight-text {
-    opacity: var(--lowlight-text-opacity);
-}
-
-/* Link <path> elements between nodes */
-.link-path {
-    fill: none;
-    stroke-opacity: var(--svg-link-path-opacity);
 }
