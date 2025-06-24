@@ -31,12 +31,10 @@
       </div>
       <div class="setting-panel">
         <label>Ranks to show: </label>
-          <label v-for="rank in rankOptions" :key="rank" >
-            <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
-          </label>
-        </div>
+        <label v-for="rank in rankOptions" :key="rank" >
+          <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
+        </label>
       </div>
-
     </div>
     <h1>Sankey Plugin Demo</h1>
 
@@ -59,7 +57,7 @@
           '#E15759', '#4E79A7', '#76B7B2', '#F28E2B', '#59A14F',
           '#EDC948', '#B07AA1' 
         ]"
-        :ranksToShow="orderedRanksToShow" 
+        :ranksToShow="ranksToShow" 
     />
 
   </div>
@@ -75,9 +73,6 @@ export default {
       if (parseInt(this.inputData) === 3) return this.fileContent3;
       return this.fileContent1;
     },
-    orderedRanksToShow() {
-      return this.rankOptions.filter(rank => this.ranksToShow.includes(rank));
-    }
   },
   mounted() {
     const query = window.matchMedia('(prefers-color-scheme: dark)');

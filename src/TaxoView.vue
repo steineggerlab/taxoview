@@ -50,6 +50,7 @@ export default {
 	},
 	data: () => ({
 		sankeyRankColumns,
+		sankeyRankColumnsWithRoot: ["no rank", ...sankeyRankColumns],
 	}),
 	watch: {
 		figureHeight: 'updateSankey',
@@ -78,6 +79,11 @@ export default {
 		ranksToShow: 'updateSankey',
 	},
 	computed: {
+		sortedRanksToShow() {
+			return this.sankeyRankColumnsWithRoot.filter(rank =>
+				this.ranksToShow.includes(rank)
+			);
+		},
 		chartFn() {
 			return TaxoView()
 				.height(this.figureHeight)
@@ -103,7 +109,7 @@ export default {
 				.taxaLimit(this.taxaLimit)
 				.cladeReadsLabel(this.cladeReadsLabel)
 				.colorScheme(this.colorScheme)
-				.ranksToShow(this.ranksToShow)
+				.ranksToShow(this.sortedRanksToShow)
 				.rankList(this.sankeyRankColumns);
 		}
 	},
