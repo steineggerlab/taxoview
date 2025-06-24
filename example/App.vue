@@ -30,11 +30,9 @@
         <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
       </div>
       <div class="setting-panel">
-        <label>Visible ranks:</label>
-        <div style="display: flex; flex-direction: column; max-height: 150px; overflow-y: auto;">
-          <label v-for="rank in sankeyRankColumnsWithRoot" :key="rank" style="font-size: 12px;">
-            <input type="checkbox" :value="rank" v-model="ranksToShow" />
-            {{ rank }}
+        <label>Ranks to show: </label>
+          <label v-for="rank in rankOptions" :key="rank" >
+            <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
           </label>
         </div>
       </div>
@@ -78,7 +76,7 @@ export default {
       return this.fileContent1;
     },
     orderedRanksToShow() {
-      return this.sankeyRankColumnsWithRoot.filter(rank => this.ranksToShow.includes(rank));
+      return this.rankOptions.filter(rank => this.ranksToShow.includes(rank));
     }
   },
   mounted() {
@@ -98,8 +96,8 @@ export default {
       linkPathOpacity: 0.3,
       figureHeight: 700,
       figureWidth: 1100,
-      sankeyRankColumnsWithRoot: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
-      ranksToShow: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      rankOptions: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      ranksToShow: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       inputData: "1",
       fileContent1: `5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root

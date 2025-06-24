@@ -20,6 +20,11 @@ export default {
 
 				let record = Object.fromEntries(headers.map((header, index) => [header, data[index]]));
 
+				// Convert 'superkingdom' to 'domain'
+				if (record.rank === "superkingdom") {
+					record.rank = "domain";
+				}
+
 				if (data[5]) {
 					// Skip empty rows or rows with only whitespace
 					const leadingSpacesInName = (data[5].match(/^\s+/) || [""])[0].length; // Count leading spaces in name

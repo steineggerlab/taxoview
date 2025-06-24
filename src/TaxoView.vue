@@ -44,13 +44,12 @@ export default {
 		},
 		ranksToShow: {
 			type: Array,
-			default: () => ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+			default: () => ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
 			required: false
 		},
 	},
 	data: () => ({
 		sankeyRankColumns,
-		sankeyRankColumnsWithRoot: ["no rank", ...sankeyRankColumns],
 	}),
 	watch: {
 		rawData: 'updateSankey',
@@ -100,7 +99,6 @@ export default {
 				.nodeWidth(this.nodeWidth)
 				.rankLabelFontSize(this.rankLabelFontSize)
 				.rankList(this.sankeyRankColumns)
-				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
 				.showAll(this.showAll)
 				.taxaLimit(this.taxaLimit)
 				.width(this.figureWidth)

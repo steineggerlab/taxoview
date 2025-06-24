@@ -4,7 +4,7 @@
 
 import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
-import { sankeyRankColumns } from "./rankUtils.js";
+import { sankeyRankColumns, rankLabels } from "./rankUtils.js";
 import TSVParser from "./tsvParser.js";
 import './stylesheet.css';
 
@@ -50,8 +50,6 @@ export default function TaxoView() {
         fontFill: 'black',
         // superkingdom --> domain
         rankList: sankeyRankColumns,
-        rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
-        ranksToShow: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
         colorScheme: [
             // Autum colours
             "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
@@ -351,8 +349,6 @@ export default function TaxoView() {
             "phylum": "P",
             "class": "C",
             "order": "O",
-            "family": "F",
-            "genus": "G",
             "species": "S",
             "no rank": " " // for root/unclassified
           };
