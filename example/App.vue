@@ -29,6 +29,16 @@
         <input class="setting-input" id="show-all" type="checkbox" v-model.number="showAll" />
         <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
       </div>
+      <div class="setting-panel">
+        <label>Visible ranks:</label>
+        <div style="display: flex; flex-direction: column; max-height: 150px; overflow-y: auto;">
+          <label v-for="rank in sankeyRankColumnsWithRoot" :key="rank" style="font-size: 12px;">
+            <input type="checkbox" :value="rank" v-model="ranksToShow" />
+            {{ rank }}
+          </label>
+        </div>
+      </div>
+
     </div>
     <h1>Sankey Plugin Demo</h1>
 
@@ -51,6 +61,7 @@
           '#E15759', '#4E79A7', '#76B7B2', '#F28E2B', '#59A14F',
           '#EDC948', '#B07AA1' 
         ]"
+        :ranksToShow="orderedRanksToShow" 
     />
 
   </div>
@@ -60,11 +71,14 @@
 export default {
   name: 'App',
   computed: {
-    usedData: function() {
-      if (parseInt(this.inputData) === 1) return this.fileContent1;      
-      if (parseInt(this.inputData) === 2) return this.fileContent2;      
-      if (parseInt(this.inputData) === 3) return this.fileContent3;      
-      return this.fileContent1;      
+    usedData: function () {
+      if (parseInt(this.inputData) === 1) return this.fileContent1;
+      if (parseInt(this.inputData) === 2) return this.fileContent2;
+      if (parseInt(this.inputData) === 3) return this.fileContent3;
+      return this.fileContent1;
+    },
+    orderedRanksToShow() {
+      return this.sankeyRankColumnsWithRoot.filter(rank => this.ranksToShow.includes(rank));
     }
   },
   mounted() {
@@ -78,12 +92,14 @@ export default {
     return {
       // Sample File Content
       showAll: false,
-			fontFill: "black",
+      fontFill: "black",
       taxaLimit: 10,
       nodePadding: 13,
       linkPathOpacity: 0.3,
       figureHeight: 700,
       figureWidth: 1100,
+      sankeyRankColumnsWithRoot: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      ranksToShow: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       inputData: "1",
       fileContent1: `5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root

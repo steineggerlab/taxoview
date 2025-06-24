@@ -21,17 +21,17 @@ export default {
 		nodeValueFontSize: { type: Number, default: 10, required: false },
 		nodePadding: { type: Number, default: 13, required: false },
 		nodeWidth: { type: Number, default: 20, required: false },
-        lowlightTextOpacity: { type: Number, default: 0.1, required: false },
-        lowlightShapeOpacity: { type: Number, default: 0.1, required: false },
-        linkPathOpacity: { type: Number, default: 0.3, required: false },
-        fontWeight: { type: String, default: 'normal', required: false },
-        fontFamily: { type: String, default: 'Arial, sans-serif', required: false },
-        fontFill: { type: String, default: 'black', required: false },
+		lowlightTextOpacity: { type: Number, default: 0.1, required: false },
+		lowlightShapeOpacity: { type: Number, default: 0.1, required: false },
+		linkPathOpacity: { type: Number, default: 0.3, required: false },
+		fontWeight: { type: String, default: 'normal', required: false },
+		fontFamily: { type: String, default: 'Arial, sans-serif', required: false },
+		fontFill: { type: String, default: 'black', required: false },
 		rankLabelFontSize: { type: Number, default: 14, required: false },
 		rawData: { type: String, required: true },
 		showAll: { type: Boolean, default: false, required: false },
 		taxaLimit: { type: Number, default: 10, required: false },
-        cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
+		cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
 		colorScheme: {
 			type: Array,
 			default: () => ([
@@ -41,7 +41,12 @@ export default {
 				"#FFCD87", "#BC7576",
 			]),
 			validator: (arr) => Array.isArray(arr) && arr.every(color => typeof color === 'string' && CSS.supports('color', color))
-		}
+		},
+		ranksToShow: {
+			type: Array,
+			default: () => ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+			required: false
+		},
 	},
 	data: () => ({
 		sankeyRankColumns,
@@ -69,6 +74,8 @@ export default {
 		fontFamily: 'updateSankey',
 		lowlightShapeOpacity: 'updateSankey',
 		lowlightTextOpacity: 'updateSankey',
+		colorScheme: 'updateSankey',
+		ranksToShow: 'updateSankey',
 	},
 	computed: {
 		chartFn() {
@@ -97,7 +104,8 @@ export default {
 				.showAll(this.showAll)
 				.taxaLimit(this.taxaLimit)
 				.width(this.figureWidth)
-				.data(this.rawData);
+				.data(this.rawData)
+				.ranksToShow(this.ranksToShow);
 		}
 	},
 	methods: {

@@ -51,6 +51,7 @@ export default function TaxoView() {
         // superkingdom --> domain
         rankList: sankeyRankColumns,
         rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
+        ranksToShow: ["no rank", "superkingdom", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
         colorScheme: [
             // Autum colours
             "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
@@ -159,7 +160,7 @@ export default function TaxoView() {
                 if (!nodesByRank["no rank"]) {
                     nodesByRank["no rank"] = [];
                 }
-                // nodesByRank["root"].push(node); // FIXME: overlapping issue with root node when i put this in
+                nodesByRank["no rank"].push(node);
                 
                 // Reassign some attributes specific to unclassified node
                 node.rank = "no rank";
@@ -178,8 +179,6 @@ export default function TaxoView() {
                 node.rankDisplayName = node.name;
                 
                 rootNode = node;
-                allNodes.push(rootNode);
-                selectedNodes.push(rootNode);
             } 
             
             // Store lineage for each node
@@ -211,16 +210,18 @@ export default function TaxoView() {
         });
         
         // Step 2: Store all nodes and store rank-filtered nodes separately
-        config.rankList.forEach((rank) => {
-            if (nodesByRank[rank]) {
-                // Store all nodes
-                allNodes.push(...nodesByRank[rank]);
+        config.ranksToShow
+            .slice().reverse() // Iterating from the higher ranks helps with node overlapping
+            .forEach((rank) => {
+                if (nodesByRank[rank]) {
+                    // Store all nodes
+                    allNodes.push(...nodesByRank[rank]);
 
-                // Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
-                const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : config.taxaLimit);
-                selectedNodes.push(...topNodes);
-            }
-        });
+                    // Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
+                    const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : config.taxaLimit);
+                    selectedNodes.push(...topNodes);
+                }
+            });
         
         // Step 3: Create links and store each node to its parent's children collection
         function generateLinks(nodes, targetArray, sankeyRankColumns) {
@@ -247,31 +248,8 @@ export default function TaxoView() {
                 }
             });
         }
-        generateLinks(selectedNodes, selectedLinks, config.rankListWithRoot);
-        generateLinks(allNodes, allLinks, config.rankListWithRoot); 
-        
-        if (unclassifiedNode && rootNode) { // FIXME: remove rootNode if unneeded
-            // Add to selected and all nodes (always present, excluded from taxa limit)
-            selectedNodes.push(unclassifiedNode);
-            allNodes.push(unclassifiedNode);
-
-            // Add link from root node to unclassified node
-            // selectedLinks.push({
-            // 	sourceName: rootNode.name,
-            // 	source: rootNode.id,
-            // 	targetName: unclassifiedNode.name,
-            // 	target: unclassifiedNode.id,
-            // 	value: totalUnclassifiedCladeReads,
-            // });
-            // allLinks.push({
-            // 	sourceName: rootNode.name,
-            // 	source: rootNode.id,
-            // 	targetName: unclassifiedNode.name,
-            // 	target: unclassifiedNode.id,
-            // 	value: totalUnclassifiedCladeReads,
-            // });
-        // }
-        }
+        generateLinks(selectedNodes, selectedLinks, config.ranksToShow);
+        generateLinks(allNodes, allLinks, config.ranksToShow); 
         
         return { nodes: selectedNodes, links: selectedLinks };
     }
@@ -349,8 +327,8 @@ export default function TaxoView() {
         const color = d3.scaleOrdinal().range(config.colorScheme);
 
         // Manually adjust nodes position to align by rank
-        const columnWidth = (config.width - config.marginRight) / config.rankListWithRoot.length;
-        const columnMap = config.rankListWithRoot.reduce((acc, rank, index) => {
+        const columnWidth = (config.width - config.marginRight) / config.ranksToShow.length;
+        const columnMap = config.ranksToShow.reduce((acc, rank, index) => {
             const leftMargin = 10;
             acc[rank] = index * columnWidth + leftMargin;
             return acc;
@@ -367,14 +345,23 @@ export default function TaxoView() {
         sankeyGenerator.update(graph);
 
         // Add rank column labels
-        const rankLabels = [" ", "D", "K", "P", "C", "O", "F", "G", "S"];
+        const rankLabels = { // TODO: move this to rankUtils.js
+            "superkingdom": "D",
+            "kingdom": "K",
+            "phylum": "P",
+            "class": "C",
+            "order": "O",
+            "family": "F",
+            "genus": "G",
+            "species": "S",
+            "no rank": " " // for root/unclassified
+          };
         svg
-            .text((_, index) => rankLabels[index])
             .append("g")
             .selectAll("text")
-            .data(config.rankListWithRoot)
+            .data(config.ranksToShow)
             .join("text")
-            .text((_, index) => rankLabels[index])
+            .text((rank) => rankLabels[rank])
             .attr("x", (rank) => columnMap[rank] + sankeyGenerator.nodeWidth() / 2)
             .attr("y", config.height + config.marginBottom / 2)
             .attr("dy", "0.35em")
