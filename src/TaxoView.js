@@ -50,8 +50,9 @@ export default function TaxoView() {
         fontFill: 'black',
         // superkingdom --> domain
         rankList: sankeyRankColumns,
+        ranksToShow: ["no rank", ...sankeyRankColumns],
         colorScheme: [
-            // Autum colours
+            // Autumn colours
             "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
             "#F7E5BF", "#C87505", "#F18E3F", "#E59579", "#C14C32",
             "#80003A", "#506432", "#FFC500", "#B30019", "#EC410B",
@@ -251,7 +252,7 @@ export default function TaxoView() {
         
         return { nodes: selectedNodes, links: selectedLinks };
     }
-    
+
     function highlightNodes(query) {
         const svg = containerCache.select("svg");
         config.searchQueryMatchNodes.clear(); // Clear previous matches
@@ -342,16 +343,6 @@ export default function TaxoView() {
         // Re-run the layout to ensure correct vertical positioning
         sankeyGenerator.update(graph);
 
-        // Add rank column labels
-        const rankLabels = { // TODO: move this to rankUtils.js
-            "superkingdom": "D",
-            "kingdom": "K",
-            "phylum": "P",
-            "class": "C",
-            "order": "O",
-            "species": "S",
-            "no rank": " " // for root/unclassified
-          };
         svg
             .append("g")
             .selectAll("text")

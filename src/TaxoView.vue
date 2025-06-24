@@ -44,7 +44,7 @@ export default {
 		},
 		ranksToShow: {
 			type: Array,
-			default: () => ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+			default: () => ["no rank", ...sankeyRankColumns],
 			required: false
 		},
 	},
@@ -52,58 +52,59 @@ export default {
 		sankeyRankColumns,
 	}),
 	watch: {
-		rawData: 'updateSankey',
-		taxaLimit: 'updateSankey',
-		minThresholdMode: 'updateSankey',
-		minThreshold: 'updateSankey',
 		figureHeight: 'updateSankey',
-		labelOption: 'updateSankey',
-		showAll: 'updateSankey',
 		figureWidth: 'updateSankey',
+		labelOption: 'updateSankey',
 		marginBottom: 'updateSankey',
 		marginRight: 'updateSankey',
-		nodeWidth: 'updateSankey',
-		nodePadding: 'updateSankey',
+		minThreshold: 'updateSankey',
+		minThresholdMode: 'updateSankey',
 		nodeLabelFontSize: 'updateSankey',
 		nodeValueFontSize: 'updateSankey',
-		rankLabelFontSize: 'updateSankey',
+		nodePadding: 'updateSankey',
+		nodeWidth: 'updateSankey',
+		lowlightTextOpacity: 'updateSankey',
+		lowlightShapeOpacity: 'updateSankey',
 		linkPathOpacity: 'updateSankey',
 		fontWeight: 'updateSankey',
-		fontFill: 'updateSankey',
 		fontFamily: 'updateSankey',
-		lowlightShapeOpacity: 'updateSankey',
-		lowlightTextOpacity: 'updateSankey',
+		fontFill: 'updateSankey',
+		rankLabelFontSize: 'updateSankey',
+		rawData: 'updateSankey',
+		showAll: 'updateSankey',
+		taxaLimit: 'updateSankey',
+		cladeReadsLabel: 'updateSankey',
 		colorScheme: 'updateSankey',
 		ranksToShow: 'updateSankey',
 	},
 	computed: {
 		chartFn() {
 			return TaxoView()
-				.cladeReadsLabel(this.cladeReadsLabel)
-				.colorScheme(this.colorScheme)
-				.fontFamily(this.fontFamily)
-				.fontFill(this.fontFill)
-				.fontWeight(this.fontWeight)
 				.height(this.figureHeight)
+				.width(this.figureWidth)
 				.labelOption(this.labelOption)
-				.linkPathOpacity(this.linkPathOpacity)
-				.lowlightShapeOpacity(this.lowlightShapeOpacity)
-				.lowlightTextOpacity(this.lowlightTextOpacity)
 				.marginBottom(this.marginBottom)
 				.marginRight(this.marginRight)
 				.minThreshold(this.minThreshold)
 				.minThresholdMode(this.minThresholdMode)
 				.nodeLabelFontSize(this.nodeLabelFontSize)
-				.nodePadding(this.nodePadding)
 				.nodeValueFontSize(this.nodeValueFontSize)
+				.nodePadding(this.nodePadding)
 				.nodeWidth(this.nodeWidth)
+				.lowlightTextOpacity(this.lowlightTextOpacity)
+				.lowlightShapeOpacity(this.lowlightShapeOpacity)
+				.linkPathOpacity(this.linkPathOpacity)
+				.fontWeight(this.fontWeight)
+				.fontFamily(this.fontFamily)
+				.fontFill(this.fontFill)
 				.rankLabelFontSize(this.rankLabelFontSize)
-				.rankList(this.sankeyRankColumns)
+				.data(this.rawData)
 				.showAll(this.showAll)
 				.taxaLimit(this.taxaLimit)
-				.width(this.figureWidth)
-				.data(this.rawData)
-				.ranksToShow(this.ranksToShow);
+				.cladeReadsLabel(this.cladeReadsLabel)
+				.colorScheme(this.colorScheme)
+				.ranksToShow(this.ranksToShow)
+				.rankList(this.sankeyRankColumns);
 		}
 	},
 	methods: {
