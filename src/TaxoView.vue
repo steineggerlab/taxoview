@@ -1,5 +1,5 @@
 <template>
-	<div ref="sankeyContainer"></div>
+	<div id="sankey-container"></div>
 </template>
 
 <script>
@@ -32,6 +32,7 @@ export default {
 		showAll: { type: Boolean, default: false, required: false },
 		taxaLimit: { type: Number, default: 10, required: false },
 		cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
+		searchQuery: { type: String, required: false },
 		colorScheme: {
 			type: Array,
 			default: () => ([
@@ -77,6 +78,7 @@ export default {
 		cladeReadsLabel: 'updateSankey',
 		colorScheme: 'updateSankey',
 		ranksToShow: 'updateSankey',
+		searchQuery: 'searchQueryFn'
 	},
 	computed: {
 		sortedRanksToShow() {
@@ -86,6 +88,10 @@ export default {
 		},
 		chartFn() {
 			return TaxoView()
+				.onNodeClick(d => {
+					this.$emit('node-clicked', d);
+				})
+				.searchQuery(this.searchQuery)
 				.height(this.figureHeight)
 				.width(this.figureWidth)
 				.labelOption(this.labelOption)
@@ -114,10 +120,15 @@ export default {
 		}
 	},
 	methods: {
+		searchQueryFn(newVal) {
+			if (!this.chart) return;
+			this.chart.searchQueryExternal(newVal);
+		},
 		createSankey() {
-			const container = this.$refs.sankeyContainer;
-			if (!container || !container.parentElement) return;
-			d3.select(container).transition().call(this.chartFn);
+			const container = this.$el;
+			if (!container) return;
+			this.chart = this.chartFn;
+			d3.select(container).transition().call(this.chart);
 		},
 		async updateSankey() {
 			this.loading = true;

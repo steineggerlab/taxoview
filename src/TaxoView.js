@@ -62,8 +62,9 @@ export default function TaxoView() {
         unclassifiedLabelColor: "#696B7E",
         cladeReadsLabel: "Clade Reads",
         data: null,
-        searchQuery: null,
-        searchQueryMatchNodes: new Set()
+        searchQuery: '',
+        searchQueryMatchNodes: new Set(),
+        onNodeClick: null
     }
 
     let nodesByDepth = {};
@@ -122,7 +123,7 @@ export default function TaxoView() {
 
         let rootNode = null;
         let unclassifiedNode = null;
-
+        
         // Step 1: Create nodes and save lineage data for all nodes
         data.forEach((d) => {
             let node = {
@@ -254,15 +255,15 @@ export default function TaxoView() {
     }
 
     function highlightNodes(query) {
-        const svg = containerCache.select("svg");
+        const svg = selectionCache.select("svg");
         config.searchQueryMatchNodes.clear(); // Clear previous matches
 
         // If the query is empty, reset all nodes and links to full opacity
-        if (!query) {
-            svg.selectAll("rect").style("opacity", config.lowlightShapeOpacity);
-            svg.selectAll("path").style("opacity", config.lowlightShapeOpacity);
-            svg.selectAll("text.node").style("opacity", config.lowlightTextOpacity);
-            svg.selectAll(".clade-reads").style("opacity", config.lowlightTextOpacity);
+        if (query === '' || !query) {
+            svg.selectAll("rect").style("opacity", 1);
+            svg.selectAll("path").style("opacity", config.linkPathOpacity);
+            svg.selectAll("text.node").style("opacity", 1);
+            svg.selectAll(".clade-reads").style("opacity", 1);
             return;
         }
 
@@ -470,6 +471,11 @@ export default function TaxoView() {
                 }
                 // Remove the tooltip when mouse leaves
                 d3.select(".tooltip").remove();
+            })
+            .on("click", (_, d) => {
+                if (typeof config.onNodeClick === 'function') {
+                    config.onNodeClick(d);
+                }
             });
 
         // Create node rectangles
@@ -512,6 +518,9 @@ export default function TaxoView() {
             .attr("font-weight", config.fontWeight)
             .attr("font-family", config.fontFamily)
             .attr("font-size", `${config.nodeValueFontSize}px`);
+        
+        // if (config.searchQuery)
+            // highlightNodes(config.searchQuery);
     }
     
     function chart(selection) {
@@ -519,6 +528,10 @@ export default function TaxoView() {
             selectionCache = d3.select(this);
             createSankey(config.data);
         });
+    }
+    
+    chart.searchQueryExternal = (query) => {
+        highlightNodes(query);
     }
 
     // Setters/getters for all configurables
