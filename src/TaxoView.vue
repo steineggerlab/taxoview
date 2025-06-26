@@ -1,5 +1,5 @@
 <template>
-	<div ref="sankeyContainer"></div>
+	<div id="sankey-container"></div>
 </template>
 
 <script>
@@ -21,17 +21,18 @@ export default {
 		nodeValueFontSize: { type: Number, default: 10, required: false },
 		nodePadding: { type: Number, default: 13, required: false },
 		nodeWidth: { type: Number, default: 20, required: false },
-        lowlightTextOpacity: { type: Number, default: 0.1, required: false },
-        lowlightShapeOpacity: { type: Number, default: 0.1, required: false },
-        linkPathOpacity: { type: Number, default: 0.3, required: false },
-        fontWeight: { type: String, default: 'normal', required: false },
-        fontFamily: { type: String, default: 'Arial, sans-serif', required: false },
-        fontFill: { type: String, default: 'black', required: false },
+		lowlightTextOpacity: { type: Number, default: 0.1, required: false },
+		lowlightShapeOpacity: { type: Number, default: 0.1, required: false },
+		linkPathOpacity: { type: Number, default: 0.3, required: false },
+		fontWeight: { type: String, default: 'normal', required: false },
+		fontFamily: { type: String, default: 'Arial, sans-serif', required: false },
+		fontFill: { type: String, default: 'black', required: false },
 		rankLabelFontSize: { type: Number, default: 14, required: false },
 		rawData: { type: String, required: true },
 		showAll: { type: Boolean, default: false, required: false },
 		taxaLimit: { type: Number, default: 10, required: false },
-        cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
+		cladeReadsLabel: { type: String, default: "Clade Reads", required: false },
+		searchQuery: { type: String, required: false },
 		colorScheme: {
 			type: Array,
 			default: () => ([
@@ -41,70 +42,93 @@ export default {
 				"#FFCD87", "#BC7576",
 			]),
 			validator: (arr) => Array.isArray(arr) && arr.every(color => typeof color === 'string' && CSS.supports('color', color))
-		}
+		},
+		ranksToShow: {
+			type: Array,
+			default: () => ["no rank", ...sankeyRankColumns],
+			required: false
+		},
 	},
 	data: () => ({
 		sankeyRankColumns,
 		sankeyRankColumnsWithRoot: ["no rank", ...sankeyRankColumns],
 	}),
 	watch: {
-		rawData: 'updateSankey',
-		taxaLimit: 'updateSankey',
-		minThresholdMode: 'updateSankey',
-		minThreshold: 'updateSankey',
 		figureHeight: 'updateSankey',
-		labelOption: 'updateSankey',
-		showAll: 'updateSankey',
 		figureWidth: 'updateSankey',
+		labelOption: 'updateSankey',
 		marginBottom: 'updateSankey',
 		marginRight: 'updateSankey',
-		nodeWidth: 'updateSankey',
-		nodePadding: 'updateSankey',
+		minThreshold: 'updateSankey',
+		minThresholdMode: 'updateSankey',
 		nodeLabelFontSize: 'updateSankey',
 		nodeValueFontSize: 'updateSankey',
-		rankLabelFontSize: 'updateSankey',
+		nodePadding: 'updateSankey',
+		nodeWidth: 'updateSankey',
+		lowlightTextOpacity: 'updateSankey',
+		lowlightShapeOpacity: 'updateSankey',
 		linkPathOpacity: 'updateSankey',
 		fontWeight: 'updateSankey',
-		fontFill: 'updateSankey',
 		fontFamily: 'updateSankey',
-		lowlightShapeOpacity: 'updateSankey',
-		lowlightTextOpacity: 'updateSankey',
+		fontFill: 'updateSankey',
+		rankLabelFontSize: 'updateSankey',
+		rawData: 'updateSankey',
+		showAll: 'updateSankey',
+		taxaLimit: 'updateSankey',
+		cladeReadsLabel: 'updateSankey',
+		colorScheme: 'updateSankey',
+		ranksToShow: 'updateSankey',
+		searchQuery: 'searchQueryFn'
 	},
 	computed: {
+		sortedRanksToShow() {
+			return this.sankeyRankColumnsWithRoot.filter(rank =>
+				this.ranksToShow.includes(rank)
+			);
+		},
 		chartFn() {
 			return TaxoView()
-				.cladeReadsLabel(this.cladeReadsLabel)
-				.colorScheme(this.colorScheme)
-				.fontFamily(this.fontFamily)
-				.fontFill(this.fontFill)
-				.fontWeight(this.fontWeight)
+				.onNodeClick(d => {
+					this.$emit('node-clicked', d);
+				})
+				.searchQuery(this.searchQuery)
 				.height(this.figureHeight)
+				.width(this.figureWidth)
 				.labelOption(this.labelOption)
-				.linkPathOpacity(this.linkPathOpacity)
-				.lowlightShapeOpacity(this.lowlightShapeOpacity)
-				.lowlightTextOpacity(this.lowlightTextOpacity)
 				.marginBottom(this.marginBottom)
 				.marginRight(this.marginRight)
 				.minThreshold(this.minThreshold)
 				.minThresholdMode(this.minThresholdMode)
 				.nodeLabelFontSize(this.nodeLabelFontSize)
-				.nodePadding(this.nodePadding)
 				.nodeValueFontSize(this.nodeValueFontSize)
+				.nodePadding(this.nodePadding)
 				.nodeWidth(this.nodeWidth)
+				.lowlightTextOpacity(this.lowlightTextOpacity)
+				.lowlightShapeOpacity(this.lowlightShapeOpacity)
+				.linkPathOpacity(this.linkPathOpacity)
+				.fontWeight(this.fontWeight)
+				.fontFamily(this.fontFamily)
+				.fontFill(this.fontFill)
 				.rankLabelFontSize(this.rankLabelFontSize)
-				.rankList(this.sankeyRankColumns)
-				.rankListWithRoot(this.sankeyRankColumnsWithRoot)
+				.data(this.rawData)
 				.showAll(this.showAll)
 				.taxaLimit(this.taxaLimit)
-				.width(this.figureWidth)
-				.data(this.rawData);
+				.cladeReadsLabel(this.cladeReadsLabel)
+				.colorScheme(this.colorScheme)
+				.ranksToShow(this.sortedRanksToShow)
+				.rankList(this.sankeyRankColumns);
 		}
 	},
 	methods: {
+		searchQueryFn(newVal) {
+			if (!this.chart) return;
+			this.chart.searchQueryExternal(newVal);
+		},
 		createSankey() {
-			const container = this.$refs.sankeyContainer;
-			if (!container || !container.parentElement) return;
-			d3.select(container).transition().call(this.chartFn);
+			const container = this.$el;
+			if (!container) return;
+			this.chart = this.chartFn;
+			d3.select(container).transition().call(this.chart);
 		},
 		async updateSankey() {
 			this.loading = true;

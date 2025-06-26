@@ -4,7 +4,7 @@
 
 import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal, sankeyJustify } from "d3-sankey";
-import { sankeyRankColumns } from "./rankUtils.js";
+import { sankeyRankColumns, rankLabels } from "./rankUtils.js";
 import TSVParser from "./tsvParser.js";
 import './stylesheet.css';
 
@@ -50,9 +50,9 @@ export default function TaxoView() {
         fontFill: 'black',
         // superkingdom --> domain
         rankList: sankeyRankColumns,
-        rankListWithRoot: [ "no rank", ...sankeyRankColumns ],
+        ranksToShow: ["no rank", ...sankeyRankColumns],
         colorScheme: [
-            // Autum colours
+            // Autumn colours
             "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
             "#F7E5BF", "#C87505", "#F18E3F", "#E59579", "#C14C32",
             "#80003A", "#506432", "#FFC500", "#B30019", "#EC410B",
@@ -62,8 +62,9 @@ export default function TaxoView() {
         unclassifiedLabelColor: "#696B7E",
         cladeReadsLabel: "Clade Reads",
         data: null,
-        searchQuery: null,
-        searchQueryMatchNodes: new Set()
+        searchQuery: '',
+        searchQueryMatchNodes: new Set(),
+        onNodeClick: null
     }
 
     let nodesByDepth = {};
@@ -122,7 +123,7 @@ export default function TaxoView() {
 
         let rootNode = null;
         let unclassifiedNode = null;
-
+        
         // Step 1: Create nodes and save lineage data for all nodes
         data.forEach((d) => {
             let node = {
@@ -159,7 +160,7 @@ export default function TaxoView() {
                 if (!nodesByRank["no rank"]) {
                     nodesByRank["no rank"] = [];
                 }
-                // nodesByRank["root"].push(node); // FIXME: overlapping issue with root node when i put this in
+                nodesByRank["no rank"].push(node);
                 
                 // Reassign some attributes specific to unclassified node
                 node.rank = "no rank";
@@ -178,8 +179,6 @@ export default function TaxoView() {
                 node.rankDisplayName = node.name;
                 
                 rootNode = node;
-                allNodes.push(rootNode);
-                selectedNodes.push(rootNode);
             } 
             
             // Store lineage for each node
@@ -211,16 +210,18 @@ export default function TaxoView() {
         });
         
         // Step 2: Store all nodes and store rank-filtered nodes separately
-        config.rankList.forEach((rank) => {
-            if (nodesByRank[rank]) {
-                // Store all nodes
-                allNodes.push(...nodesByRank[rank]);
+        config.ranksToShow
+            .slice().reverse() // Iterating from the higher ranks helps with node overlapping
+            .forEach((rank) => {
+                if (nodesByRank[rank]) {
+                    // Store all nodes
+                    allNodes.push(...nodesByRank[rank]);
 
-                // Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
-                const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : config.taxaLimit);
-                selectedNodes.push(...topNodes);
-            }
-        });
+                    // Sort nodes by clade_reads in descending order and select the top nodes based on max limit value
+                    const topNodes = nodesByRank[rank].sort((a, b) => b.clade_reads - a.clade_reads).slice(0, isFullGraph ? nodesByRank[rank].length : config.taxaLimit);
+                    selectedNodes.push(...topNodes);
+                }
+            });
         
         // Step 3: Create links and store each node to its parent's children collection
         function generateLinks(nodes, targetArray, sankeyRankColumns) {
@@ -247,45 +248,22 @@ export default function TaxoView() {
                 }
             });
         }
-        generateLinks(selectedNodes, selectedLinks, config.rankListWithRoot);
-        generateLinks(allNodes, allLinks, config.rankListWithRoot); 
-        
-        if (unclassifiedNode && rootNode) { // FIXME: remove rootNode if unneeded
-            // Add to selected and all nodes (always present, excluded from taxa limit)
-            selectedNodes.push(unclassifiedNode);
-            allNodes.push(unclassifiedNode);
-
-            // Add link from root node to unclassified node
-            // selectedLinks.push({
-            // 	sourceName: rootNode.name,
-            // 	source: rootNode.id,
-            // 	targetName: unclassifiedNode.name,
-            // 	target: unclassifiedNode.id,
-            // 	value: totalUnclassifiedCladeReads,
-            // });
-            // allLinks.push({
-            // 	sourceName: rootNode.name,
-            // 	source: rootNode.id,
-            // 	targetName: unclassifiedNode.name,
-            // 	target: unclassifiedNode.id,
-            // 	value: totalUnclassifiedCladeReads,
-            // });
-        // }
-        }
+        generateLinks(selectedNodes, selectedLinks, config.ranksToShow);
+        generateLinks(allNodes, allLinks, config.ranksToShow); 
         
         return { nodes: selectedNodes, links: selectedLinks };
     }
-    
+
     function highlightNodes(query) {
-        const svg = containerCache.select("svg");
+        const svg = selectionCache.select("svg");
         config.searchQueryMatchNodes.clear(); // Clear previous matches
 
         // If the query is empty, reset all nodes and links to full opacity
-        if (!query) {
-            svg.selectAll("rect").style("opacity", config.lowlightShapeOpacity);
-            svg.selectAll("path").style("opacity", config.lowlightShapeOpacity);
-            svg.selectAll("text.node").style("opacity", config.lowlightTextOpacity);
-            svg.selectAll(".clade-reads").style("opacity", config.lowlightTextOpacity);
+        if (query === '' || !query) {
+            svg.selectAll("rect").style("opacity", 1);
+            svg.selectAll("path").style("opacity", config.linkPathOpacity);
+            svg.selectAll("text.node").style("opacity", 1);
+            svg.selectAll(".clade-reads").style("opacity", 1);
             return;
         }
 
@@ -349,8 +327,8 @@ export default function TaxoView() {
         const color = d3.scaleOrdinal().range(config.colorScheme);
 
         // Manually adjust nodes position to align by rank
-        const columnWidth = (config.width - config.marginRight) / config.rankListWithRoot.length;
-        const columnMap = config.rankListWithRoot.reduce((acc, rank, index) => {
+        const columnWidth = (config.width - config.marginRight) / config.ranksToShow.length;
+        const columnMap = config.ranksToShow.reduce((acc, rank, index) => {
             const leftMargin = 10;
             acc[rank] = index * columnWidth + leftMargin;
             return acc;
@@ -366,15 +344,12 @@ export default function TaxoView() {
         // Re-run the layout to ensure correct vertical positioning
         sankeyGenerator.update(graph);
 
-        // Add rank column labels
-        const rankLabels = [" ", "D", "K", "P", "C", "O", "F", "G", "S"];
         svg
-            .text((_, index) => rankLabels[index])
             .append("g")
             .selectAll("text")
-            .data(config.rankListWithRoot)
+            .data(config.ranksToShow)
             .join("text")
-            .text((_, index) => rankLabels[index])
+            .text((rank) => rankLabels[rank])
             .attr("x", (rank) => columnMap[rank] + sankeyGenerator.nodeWidth() / 2)
             .attr("y", config.height + config.marginBottom / 2)
             .attr("dy", "0.35em")
@@ -496,6 +471,11 @@ export default function TaxoView() {
                 }
                 // Remove the tooltip when mouse leaves
                 d3.select(".tooltip").remove();
+            })
+            .on("click", (_, d) => {
+                if (typeof config.onNodeClick === 'function') {
+                    config.onNodeClick(d);
+                }
             });
 
         // Create node rectangles
@@ -538,6 +518,9 @@ export default function TaxoView() {
             .attr("font-weight", config.fontWeight)
             .attr("font-family", config.fontFamily)
             .attr("font-size", `${config.nodeValueFontSize}px`);
+        
+        // if (config.searchQuery)
+            // highlightNodes(config.searchQuery);
     }
     
     function chart(selection) {
@@ -545,6 +528,10 @@ export default function TaxoView() {
             selectionCache = d3.select(this);
             createSankey(config.data);
         });
+    }
+    
+    chart.searchQueryExternal = (query) => {
+        highlightNodes(query);
     }
 
     // Setters/getters for all configurables
