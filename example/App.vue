@@ -94,7 +94,8 @@ export default {
       rankOptions: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       ranksToShow: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       inputData: "1",
-      fileContent1: `5.9001	32656	32656	no rank	0	unclassified
+      fileContent1: `#clade_proportion	clade_count	taxon_count	rank	taxID	name
+5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root
 90.8851	503029	0	superkingdom	10239	  Viruses
 90.8511	502841	0	clade	2559587	    Riboviria
@@ -11523,7 +11524,7 @@ export default {
 0.0840	12300	0	genus	1965	            g__Methanomassiliicoccus_A
 0.0840	12300	12300	species	1966	              s__Methanomassiliicoccus_A intestinalis
 `,
-      fileContent3: `
+      fileContent3: `#clade_proportion	clade_count	taxon_count	rank	taxID	name
 5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root
 90.8851	503029	0	superkingdom	10239	  Viruses

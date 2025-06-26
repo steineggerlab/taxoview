@@ -13,17 +13,18 @@ export default {
 		};
 
 		const headers = ["proportion", "clade_reads", "taxon_reads", "rank", "taxon_id", "name"];
-		const records = tsv
-			.split("\n")
+
+		const lines = tsv.split("\n");
+		// If first line is a header row (starts with “#”), remove it
+		if (lines[0].trim().startsWith("#")) {
+			lines.shift();
+		}
+
+		const records = lines
 			.map((line) => {
 				const data = line.split("\t"); // Strip leading and trailing whitespace
 
 				let record = Object.fromEntries(headers.map((header, index) => [header, data[index]]));
-
-				// Convert 'superkingdom' to 'domain'
-				if (record.rank === "superkingdom") {
-					record.rank = "domain";
-				}
 
 				if (data[5]) {
 					// Skip empty rows or rows with only whitespace
@@ -32,6 +33,7 @@ export default {
 					record.depth = depth; // Depth based on indentation in front of scientific name in taxonomy report
 					record.nameWithIndentation = record.name; // Store name with indentation from taxonomy report
 					record.name = record.name.trim(); // Remove leading and trailing whitespace after counting leading spaces
+					record.rank = record.rank === "superkingdom" ? "domain" : record.rank; // Convert 'superkingdom' to 'domain'
 				}
 
 				return record;

@@ -118,10 +118,13 @@ Fields must be **tab-separated,** and all fields in each feature line must conta
 6. `name` - Scientific name of the taxon. *Must include the leading whitespaces as provided in the Kraken report*.
 
 ### Important Notes
-1. **No Headers**: The rawData string must not include a header row.
-2. **First Two Rows**:
-    - The first row must represent the *unclassified node* (Taxon ID 0).
-    - The second row must represent the *root node* (Taxon ID 1).
+1. **Optional Header Row**: 
+    - If you include a header, it must be the very first line.
+    - The header line must begin with #.
+    - Only one header row is allowed.
+2. **Required First Two Data Rows**: Immediately following the header (or at the top if you skip the header), the first two rows must be:
+    - Unclassified node – Taxon ID 0
+    - Root node – Taxon ID 1
 
 ### Example
 ```
