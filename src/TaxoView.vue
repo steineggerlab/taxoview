@@ -91,6 +91,7 @@ export default {
 				.onNodeClick(d => {
 					this.$emit('node-clicked', d);
 				})
+				.onRanksPresent(ranks => this.$emit('ranks-present', ranks))
 				.searchQuery(this.searchQuery)
 				.height(this.figureHeight)
 				.width(this.figureWidth)

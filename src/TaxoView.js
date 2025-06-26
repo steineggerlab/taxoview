@@ -64,7 +64,8 @@ export default function TaxoView() {
         data: null,
         searchQuery: '',
         searchQueryMatchNodes: new Set(),
-        onNodeClick: null
+        onNodeClick: null,
+        onRanksPresent: null,
     }
 
     let nodesByDepth = {};
@@ -287,6 +288,12 @@ export default function TaxoView() {
         const jsonData = TSVParser.tsvToJSON(fileContent).results;
         const filteredData = filterData(jsonData);
         const { nodes, links } = parseData(filteredData, config.showAll); // Convert to graph data format for d3.js
+
+        const rankListWithRoot = ["no rank", ...sankeyRankColumns];
+        const ranksPresent = Array.from(
+            new Set(nodes.map(n => n.rank))
+        ).filter(r => rankListWithRoot.includes(r));
+        config.onRanksPresent(ranksPresent);
 
         // Check if nodes and links are not empty
         if (!nodes.length || !links.length) {
