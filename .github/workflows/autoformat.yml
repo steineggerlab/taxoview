@@ -1,0 +1,40 @@
+name: Auto-format & Lint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: --all-files
+          auto_fix: true
+
+      - name: Push fixes
+        if: success() && steps.pre-commit.outcome == 'success'
+        run: |
+          git add .
+          # only open a commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-format via pre-commit"
+            git push
+          else
+            echo "No formatting changes to commit"
+          fi
