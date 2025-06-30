@@ -21,19 +21,20 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install pre-commit
-        run: pip install pre-commit
-
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        uses: pre-commit/action@v4
+        with:
+          extra_args: --all-files
+          auto_fix: true
 
-      - name: Commit & Push fixes
+      - name: Push fixes
+        if: success() && steps.pre-commit.outcome == 'success'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          # only commit if there are changes
-          if ! git diff --quiet; then
+          # only open a commit if there are changes
+          if ! git diff --cached --quiet; then
             git commit -m "chore: auto-format via pre-commit"
             git push
+          else
+            echo "No formatting changes to commit"
           fi
