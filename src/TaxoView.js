@@ -374,8 +374,7 @@ export default function TaxoView() {
                 node.color = config.rootColor;
             } else {
                 const ancestor = node.lineage.reverse().find(a => a.rank === "domain");
-                const key = ancestor ? ancestor.name : "root";
-                node.color = groupColor(key);
+                node.color = ancestor ? groupColor(ancestor.name) : config.rootColor;
             }
 
             // Set opacity based on node position
