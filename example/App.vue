@@ -40,12 +40,12 @@
           <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
         </label>
       </div>
-      <div>
+      <div class="settings-panel">
         <input
         type="text"
         v-model="searchQuery"
         placeholder="🔍 Search name or tax ID…"
-        style="width: 30vh;"
+        style="width: 200px;"
       />
       </div>
     </div>
