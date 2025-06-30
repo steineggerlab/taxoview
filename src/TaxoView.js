@@ -52,14 +52,19 @@ export default function TaxoView() {
         rankList: sankeyRankColumns,
         ranksToShow: ["no rank", ...sankeyRankColumns],
         colorScheme: [
-            // Autumn colours
-            "#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73",
-            "#F7E5BF", "#C87505", "#F18E3F", "#E59579", "#C14C32",
-            "#80003A", "#506432", "#FFC500", "#B30019", "#EC410B",
-            "#E63400", "#8CB5B5", "#6C3400", "#FFA400", "#41222A",
-            "#FFB27B", "#FFCD87", "#BC7576",
+            '#8CB5B5' , // light teal
+            '#785EF0', // purple
+            '#E59579', // salmon
+            '#506432', // dark green
+            '#BC7576', // dark salmon
+            '#6C3400', // light brown
+            '#C14C32', // dark red
+            '#648FFF', // blue
+            '#FFCD73', // yellow
+            '#41222A' , // dark brown
         ],
         unclassifiedLabelColor: "#696B7E",
+        rootColor: "#41222A",
         cladeReadsLabel: "Clade Reads",
         data: null,
         searchQuery: '',
@@ -122,9 +127,6 @@ export default function TaxoView() {
         const nodesByRank = {}; // Store nodes by rank
         let currentLineage = [];
 
-        let rootNode = null;
-        let unclassifiedNode = null;
-        
         // Step 1: Create nodes and save lineage data for all nodes
         data.forEach((d) => {
             let node = {
@@ -140,6 +142,7 @@ export default function TaxoView() {
                 taxon_reads: d.taxon_reads,
                 lineage: null,
                 isUnclassifiedNode: false,
+                isRootNode: false,
                 children: [], // FIXME: change to null?
             };
 
@@ -168,7 +171,7 @@ export default function TaxoView() {
                 node.rankDisplayName = node.name;
                 node.isUnclassifiedNode = true;
                 
-                unclassifiedNode = node;
+
             } else if (isRootNode(node)) {
                 if (!nodesByRank["no rank"]) {
                     nodesByRank["no rank"] = [];
@@ -178,8 +181,7 @@ export default function TaxoView() {
                 // Reassign some attributes specific to root node
                 node.rank = "no rank"; // FIXME: remove this after fixing logic to leave it as "no rank", same as taxonomyreport
                 node.rankDisplayName = node.name;
-                
-                rootNode = node;
+                node.isRootNode = true;
             } 
             
             // Store lineage for each node
@@ -332,24 +334,6 @@ export default function TaxoView() {
             links: links.map((d) => Object.assign({}, d)),
         });
 
-        // Extract kingdom/domain/rank names for color grouping
-        const colorGroupPriority = ["kingdom","domain","no rank"];
-        const colorGroupNames = Array.from(new Set(
-        graph.nodes.map(node => {
-            // find the first matching ancestor in priority order
-            const ancestor = node.lineage.reverse().find(a => colorGroupPriority.includes(a.rank));
-            console.log(ancestor);
-            return ancestor
-            ? (ancestor.rank === "no rank" ? "root" : ancestor.name)
-            : "root";
-        })
-        ));
-        
-        // Build color scale from group names
-        const groupColor = d3.scaleOrdinal()
-        .domain(colorGroupNames)
-        .range(config.colorScheme);
-
         // Manually adjust nodes position to align by rank
         const columnWidth = (config.width - config.marginRight) / config.ranksToShow.length;
         const columnMap = config.ranksToShow.reduce((acc, rank, index) => {
@@ -358,21 +342,44 @@ export default function TaxoView() {
             return acc;
         }, {});
 
+        // Extract kingdom/domain/rank names for color grouping
+        const colorGroupNames = Array.from(new Set(
+        graph.nodes.map(node => {
+            // find the first matching ancestor in priority order
+            const ancestor = node.lineage.reverse().find(a => a.rank === "domain");
+            return ancestor ? ancestor.name : "root";
+        })
+        ));
+        
+        // Build color scale from group names
+        const groupColor = d3.scaleOrdinal()
+        .domain(colorGroupNames)
+        .range(config.colorScheme);
+
+        // Compute opacity scale based on node position
+        const opacityScale = d3.scaleLinear()
+            .domain([1, config.width - config.marginRight])
+            .range([1, 0.3]);
+
         // Update node positions (based on rank) and color
         graph.nodes.forEach((node) => {
+            // Set node position and width
             node.x0 = columnMap[node.rank];
             node.x1 = node.x0 + sankeyGenerator.nodeWidth();
 
             // Assign color based on group color
             if (node.isUnclassifiedNode) {
                 node.color = config.unclassifiedLabelColor;
+            } else if (node.isRootNode) {
+                node.color = config.rootColor;
             } else {
-                const ancestor = node.lineage.find(a => colorGroupPriority.includes(a.rank));
-                const key = ancestor
-                    ? (ancestor.rank === "no rank" ? "root" : ancestor.name)
-                    : "root";
+                const ancestor = node.lineage.reverse().find(a => a.rank === "domain");
+                const key = ancestor ? ancestor.name : "root";
                 node.color = groupColor(key);
             }
+
+            // Set opacity based on node position
+            node.opacity = opacityScale(columnMap[node.rank]);
         });
 
         // Re-run the layout to ensure correct vertical positioning
@@ -408,16 +415,16 @@ export default function TaxoView() {
         const highlightLineage = (node) => {
             const lineageIds = new Set(node.lineage.map((n) => n.id));
             lineageIds.add(node.id);
-            svg.selectAll("rect").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightShapeOpacity);
-            svg.selectAll(".link-path").style("opacity", (d) => (lineageIds.has(d.source.id) && lineageIds.has(d.target.id)) ? config.linkPathOpacity : config.lowlightShapeOpacity);
+            svg.selectAll("rect").style("fill-opacity", (d) => lineageIds.has(d.id) ? d.opacity : config.lowlightShapeOpacity);
+            svg.selectAll(".link-path").style("stroke-opacity", (d) => (lineageIds.has(d.source.id) && lineageIds.has(d.target.id)) ? d.target.opacity * config.linkPathOpacity : d.target.opacity * config.lowlightShapeOpacity);
             svg.selectAll("text.node").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightTextOpacity);
             svg.selectAll(".clade-reads").style("opacity", (d) => lineageIds.has(d.id) ? 1 : config.lowlightTextOpacity);
         };
 
         // Function to reset highlight
         const resetHighlight = () => {
-            svg.selectAll("rect").style("opacity", 1);
-            svg.selectAll(".link-path").style("opacity", config.linkPathOpacity);
+            svg.selectAll("rect").style("fill-opacity", d => d.opacity);
+            svg.selectAll(".link-path").style("stroke-opacity", d => d.target.opacity * config.linkPathOpacity);
             svg.selectAll("text.node").style("opacity", 1);
             svg.selectAll(".clade-reads").style("opacity", 1);
         };
@@ -445,8 +452,8 @@ export default function TaxoView() {
             .attr("class", "link-path")
             .attr("d", sankeyLinkHorizontal())
             .attr("fill", "none")
-            .attr("opacity", config.linkPathOpacity)
-            .attr("stroke", (d) => (d.target.isUnclassifiedNode ? config.unclassifiedLabelColor : d3.color(d.source.color))) // Set link color to source node color with reduced opacity
+            .attr("stroke-opacity", d => d.target.opacity * config.linkPathOpacity)
+            .attr("stroke", (d) => (d.target.isUnclassifiedNode ? config.unclassifiedLabelColor : d.target.isRootNode ? config.rootColor : d3.color(d.target.color))) // Set link color to source node color with reduced opacity
             .attr("stroke-width", (d) => Math.max(1, d.width))
             .attr("clip-path", (_, i) => `url(#clip-path-${chartUniqueId}-${i})`);
 
@@ -518,7 +525,8 @@ export default function TaxoView() {
             .attr("width", (d) => d.x1 - d.x0)
             .attr("height", (d) => nodeHeight(d))
             .attr("class", (d) => `node taxid-${d.id}`)
-            .attr("fill", d => `${d.isUnclassifiedNode ? config.unclassifiedLabelColor : d.color}`);
+            .attr("fill", d => `${d.isUnclassifiedNode ? config.unclassifiedLabelColor : d.isRootNode ? config.rootColor : d.color}`)
+            .attr("fill-opacity", d => d.opacity);
 
         // Add node name labels next to node
         nodeGroup

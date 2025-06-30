@@ -10,19 +10,23 @@
         <label for="input-data">{{ `Input data: fileContent${parseInt(inputData)}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="node-padding" type="range" v-model.number="nodePadding" value="13" min="1" max="20" />
+        <input class="setting-input" id="node-padding" type="range" v-model.number="nodePadding" value="13" min="1"
+          max="20" />
         <label for="node-padding">{{ `Node padding: ${nodePadding}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="figure-height" type="range" v-model.number="figureHeight" value="700" min="100" max="1500" />
+        <input class="setting-input" id="figure-height" type="range" v-model.number="figureHeight" value="700" min="100"
+          max="1500" />
         <label for="figure-height">{{ `Figure height: ${figureHeight}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100" max="1500" />
+        <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100"
+          max="1500" />
         <label for="figure-width">{{ `Figure width: ${figureWidth}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="taxa-limit" type="range" v-model.number="taxaLimit" value="10" min="1" max="100" />
+        <input class="setting-input" id="taxa-limit" type="range" v-model.number="taxaLimit" value="10" min="1"
+          max="100" />
         <label for="figure-width">{{ `Taxa limit: ${taxaLimit}` }}</label>
       </div>
       <div class="setting-panel">
@@ -31,7 +35,7 @@
       </div>
       <div class="setting-panel">
         <label>Ranks to show: </label>
-        <label v-for="rank in rankOptions" :key="rank" >
+        <label v-for="rank in rankOptions" :key="rank">
           <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
         </label>
       </div>
@@ -39,26 +43,21 @@
     <h1>Sankey Plugin Demo</h1>
 
     <!-- Create TaxoView Component -->
-    <TaxoView
-        :rawData="usedData"
-        :taxaLimit="taxaLimit"
-        :showAll="showAll"
-        :fontFill="fontFill"
-        :minThresholdMode=0
-        :minThreshold=1
-        :figureHeight="figureHeight"
-        :figureWidth="figureWidth"
-        :labelOption=1
-        :nodePadding="nodePadding"
-        :colorScheme="[
-          '#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000',
-          '#009E73', '#00BFC4', '#F564E3', '#B79F00', '#E69F00',
-          '#56B4E9', '#0072B2', '#D55E00', '#CC79A7', '#999999',
-          '#E15759', '#4E79A7', '#76B7B2', '#F28E2B', '#59A14F',
-          '#EDC948', '#B07AA1' 
-        ]"
-        :ranksToShow="ranksToShow" 
-    />
+    <TaxoView :rawData="usedData" :taxaLimit="taxaLimit" :showAll="showAll" :fontFill="fontFill" :minThresholdMode=0
+      :minThreshold=1 :figureHeight="figureHeight" :figureWidth="figureWidth" :labelOption=1 :nodePadding="nodePadding"
+      :colorScheme="[
+        '#8CB5B5' , // light teal
+        '#785EF0', // purple
+        '#E59579', // salmon
+        '#506432', // dark green
+        '#BC7576', // dark salmon
+        '#6C3400', // light brown
+        '#C14C32', // dark red
+        '#648FFF', // blue
+        '#FFCD73', // yellow
+        '#41222A' , // dark brown
+      ]" 
+      :ranksToShow="ranksToShow" />
 
   </div>
 </template>

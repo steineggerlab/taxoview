@@ -35,12 +35,18 @@ export default {
 		searchQuery: { type: String, required: false },
 		colorScheme: {
 			type: Array,
-			default: () => ([
-				"#57291F", "#C0413B", "#D77B5F", "#FF9200", "#FFCD73", "#F7E5BF", "#C87505",
-				"#F18E3F", "#E59579", "#C14C32", "#80003A", "#506432", "#FFC500", "#B30019",
-				"#EC410B", "#E63400", "#8CB5B5", "#6C3400", "#FFA400", "#41222A", "#FFB27B",
-				"#FFCD87", "#BC7576",
-			]),
+      default: () => ([
+        '#8CB5B5', // light teal
+        '#785EF0', // purple
+        '#E59579', // salmon
+        '#506432', // dark green
+        '#BC7576', // dark salmon
+        '#6C3400', // light brown
+        '#C14C32', // dark red
+        '#648FFF', // blue
+        '#FFCD73', // yellow
+        '#41222A', // dark brown
+      ]),
 			validator: (arr) => Array.isArray(arr) && arr.every(color => typeof color === 'string' && CSS.supports('color', color))
 		},
 		ranksToShow: {
