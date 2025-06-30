@@ -1,5 +1,6 @@
 <template>
   <div style="margin: 2rem;">
+    <h1>Sankey Plugin Demo</h1>
     <div class="settings-panel">
       <div class="setting-panel">
         <select class="setting-input" id="input-data" v-model="inputData" value="1">
@@ -7,7 +8,7 @@
           <option>2</option>
           <option>3</option>
         </select>
-        <label for="input-data">{{ `Input data: fileContent${parseInt(inputData)}` }}</label>
+        <label for="input-data">{{ `Input data` }}</label>
       </div>
       <div class="setting-panel">
         <input class="setting-input" id="node-padding" type="range" v-model.number="nodePadding" value="13" min="1"
@@ -31,16 +32,23 @@
       </div>
       <div class="setting-panel">
         <input class="setting-input" id="show-all" type="checkbox" v-model.number="showAll" />
-        <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
+        <label for="show-all">{{ `Show full graph` }}</label>
       </div>
-      <div class="setting-panel">
+      <div>
         <label>Ranks to show: </label>
         <label v-for="rank in rankOptions" :key="rank">
           <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
         </label>
       </div>
+      <div>
+        <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="🔍 Search name or tax ID…"
+        style="width: 30vh;"
+      />
+      </div>
     </div>
-    <h1>Sankey Plugin Demo</h1>
 
     <!-- Create TaxoView Component -->
     <TaxoView :rawData="usedData" :taxaLimit="taxaLimit" :showAll="showAll" :fontFill="fontFill" :minThresholdMode=0
@@ -57,7 +65,9 @@
         '#FFCD73', // yellow
         '#41222A' , // dark brown
       ]" 
-      :ranksToShow="ranksToShow" />
+      :ranksToShow="ranksToShow"
+      :searchQuery="searchQuery" 
+      />
 
   </div>
 </template>
@@ -93,6 +103,7 @@ export default {
       rankOptions: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       ranksToShow: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       inputData: "1",
+      searchQuery: "",
       fileContent1: `#clade_proportion	clade_count	taxon_count	rank	taxID	name
 5.9001	32656	32656	no rank	0	unclassified
 94.0999	520822	4	no rank	1	root

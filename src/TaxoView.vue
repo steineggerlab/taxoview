@@ -129,6 +129,7 @@ export default {
 	methods: {
 		searchQueryFn(newVal) {
 			if (!this.chart) return;
+			this.chart.searchQuery(newVal);
 			this.chart.searchQueryExternal(newVal);
 		},
 		createSankey() {
