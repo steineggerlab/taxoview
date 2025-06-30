@@ -331,7 +331,24 @@ export default function TaxoView() {
             nodes: nodes.map((d) => Object.assign({}, d)),
             links: links.map((d) => Object.assign({}, d)),
         });
-        const color = d3.scaleOrdinal().range(config.colorScheme);
+
+        // Extract kingdom/domain/rank names for color grouping
+        const colorGroupPriority = ["kingdom","domain","no rank"];
+        const colorGroupNames = Array.from(new Set(
+        graph.nodes.map(node => {
+            // find the first matching ancestor in priority order
+            const ancestor = node.lineage.reverse().find(a => colorGroupPriority.includes(a.rank));
+            console.log(ancestor);
+            return ancestor
+            ? (ancestor.rank === "no rank" ? "root" : ancestor.name)
+            : "root";
+        })
+        ));
+        
+        // Build color scale from group names
+        const groupColor = d3.scaleOrdinal()
+        .domain(colorGroupNames)
+        .range(config.colorScheme);
 
         // Manually adjust nodes position to align by rank
         const columnWidth = (config.width - config.marginRight) / config.ranksToShow.length;
@@ -345,7 +362,17 @@ export default function TaxoView() {
         graph.nodes.forEach((node) => {
             node.x0 = columnMap[node.rank];
             node.x1 = node.x0 + sankeyGenerator.nodeWidth();
-            node.color = node.isUnclassifiedNode ? config.unclassifiedLabelColor : color(node.id);
+
+            // Assign color based on group color
+            if (node.isUnclassifiedNode) {
+                node.color = config.unclassifiedLabelColor;
+            } else {
+                const ancestor = node.lineage.find(a => colorGroupPriority.includes(a.rank));
+                const key = ancestor
+                    ? (ancestor.rank === "no rank" ? "root" : ancestor.name)
+                    : "root";
+                node.color = groupColor(key);
+            }
         });
 
         // Re-run the layout to ensure correct vertical positioning
