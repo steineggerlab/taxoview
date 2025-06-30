@@ -1,58 +1,58 @@
 :root {
-    --font-family: Arial, sans-serif;
+  --font-family: Arial, sans-serif;
 }
 
 .tooltip {
-    position: absolute;
-    z-index: 9999;
-    background-color: rgba(38, 50, 56, 0.95);
-    color: white;
-    font-family: var(--font-family);
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    opacity: 1;
+  position: absolute;
+  z-index: 9999;
+  background-color: rgba(38, 50, 56, 0.95);
+  color: white;
+  font-family: var(--font-family);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  opacity: 1;
 }
 
 .tooltip .tooltip-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 0.875rem;
 }
 
 .tooltip .tooltip-inner {
-    padding: 4px 8px;
+  padding: 4px 8px;
 }
 
 .tooltip .tooltip-id {
-    font-size: 0.6rem;
+  font-size: 0.6rem;
 }
 
 .tooltip .tooltip-badge {
-    background-color: rgba(255, 167, 38, 0.25);
-    color: #ffa726;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 0.875rem;
-    margin-left: 10px;
-    font-weight: bold;
+  background-color: rgba(255, 167, 38, 0.25);
+  color: #ffa726;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  margin-left: 10px;
+  font-weight: bold;
 }
 
 .tooltip hr {
-    margin: 8px 0;
-    border: none;
-    border-top: 1px solid #fff;
-    opacity: 0.2;
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid #fff;
+  opacity: 0.2;
 }
-        
+
 .tooltip .tooltip-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
 }
-  
+
 .tooltip .tooltip-label {
-    font-weight: bold;
+  font-weight: bold;
 }

@@ -1,38 +1,86 @@
 <template>
-  <div style="margin: 2rem;">
+  <div style="margin: 2rem">
     <div class="settings-panel">
       <div class="setting-panel">
-        <select class="setting-input" id="input-data" v-model="inputData" value="1">
+        <select
+          class="setting-input"
+          id="input-data"
+          v-model="inputData"
+          value="1"
+        >
           <option>1</option>
           <option>2</option>
           <option>3</option>
         </select>
-        <label for="input-data">{{ `Input data: fileContent${parseInt(inputData)}` }}</label>
+        <label for="input-data">{{
+          `Input data: fileContent${parseInt(inputData)}`
+        }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="node-padding" type="range" v-model.number="nodePadding" value="13" min="1" max="20" />
+        <input
+          class="setting-input"
+          id="node-padding"
+          type="range"
+          v-model.number="nodePadding"
+          value="13"
+          min="1"
+          max="20"
+        />
         <label for="node-padding">{{ `Node padding: ${nodePadding}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="figure-height" type="range" v-model.number="figureHeight" value="700" min="100" max="1500" />
-        <label for="figure-height">{{ `Figure height: ${figureHeight}` }}</label>
+        <input
+          class="setting-input"
+          id="figure-height"
+          type="range"
+          v-model.number="figureHeight"
+          value="700"
+          min="100"
+          max="1500"
+        />
+        <label for="figure-height">{{
+          `Figure height: ${figureHeight}`
+        }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="figure-width" type="range" v-model.number="figureWidth" value="700" min="100" max="1500" />
+        <input
+          class="setting-input"
+          id="figure-width"
+          type="range"
+          v-model.number="figureWidth"
+          value="700"
+          min="100"
+          max="1500"
+        />
         <label for="figure-width">{{ `Figure width: ${figureWidth}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="taxa-limit" type="range" v-model.number="taxaLimit" value="10" min="1" max="100" />
+        <input
+          class="setting-input"
+          id="taxa-limit"
+          type="range"
+          v-model.number="taxaLimit"
+          value="10"
+          min="1"
+          max="100"
+        />
         <label for="figure-width">{{ `Taxa limit: ${taxaLimit}` }}</label>
       </div>
       <div class="setting-panel">
-        <input class="setting-input" id="show-all" type="checkbox" v-model.number="showAll" />
+        <input
+          class="setting-input"
+          id="show-all"
+          type="checkbox"
+          v-model.number="showAll"
+        />
         <label for="show-all">{{ `Show full graph: ${showAll}` }}</label>
       </div>
       <div class="setting-panel">
         <label>Ranks to show: </label>
-        <label v-for="rank in rankOptions" :key="rank" >
-          <input type="checkbox" :value="rank" v-model="ranksToShow" />{{ rank }}
+        <label v-for="rank in rankOptions" :key="rank">
+          <input type="checkbox" :value="rank" v-model="ranksToShow" />{{
+            rank
+          }}
         </label>
       </div>
     </div>
@@ -40,32 +88,48 @@
 
     <!-- Create TaxoView Component -->
     <TaxoView
-        :rawData="usedData"
-        :taxaLimit="taxaLimit"
-        :showAll="showAll"
-        :fontFill="fontFill"
-        :minThresholdMode=0
-        :minThreshold=1
-        :figureHeight="figureHeight"
-        :figureWidth="figureWidth"
-        :labelOption=1
-        :nodePadding="nodePadding"
-        :colorScheme="[
-          '#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000',
-          '#009E73', '#00BFC4', '#F564E3', '#B79F00', '#E69F00',
-          '#56B4E9', '#0072B2', '#D55E00', '#CC79A7', '#999999',
-          '#E15759', '#4E79A7', '#76B7B2', '#F28E2B', '#59A14F',
-          '#EDC948', '#B07AA1' 
-        ]"
-        :ranksToShow="ranksToShow" 
+      :rawData="usedData"
+      :taxaLimit="taxaLimit"
+      :showAll="showAll"
+      :fontFill="fontFill"
+      :minThresholdMode="0"
+      :minThreshold="1"
+      :figureHeight="figureHeight"
+      :figureWidth="figureWidth"
+      :labelOption="1"
+      :nodePadding="nodePadding"
+      :colorScheme="[
+        '#648FFF',
+        '#785EF0',
+        '#DC267F',
+        '#FE6100',
+        '#FFB000',
+        '#009E73',
+        '#00BFC4',
+        '#F564E3',
+        '#B79F00',
+        '#E69F00',
+        '#56B4E9',
+        '#0072B2',
+        '#D55E00',
+        '#CC79A7',
+        '#999999',
+        '#E15759',
+        '#4E79A7',
+        '#76B7B2',
+        '#F28E2B',
+        '#59A14F',
+        '#EDC948',
+        '#B07AA1',
+      ]"
+      :ranksToShow="ranksToShow"
     />
-
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   computed: {
     usedData: function () {
       if (parseInt(this.inputData) === 1) return this.fileContent1;
@@ -75,11 +139,11 @@ export default {
     },
   },
   mounted() {
-    const query = window.matchMedia('(prefers-color-scheme: dark)');
-    query.addEventListener('change', e => {
-      this.fontFill = e.matches ? 'white' : 'black';
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    query.addEventListener("change", (e) => {
+      this.fontFill = e.matches ? "white" : "black";
       this.linkPathOpacity = e.matches ? 0.6 : 0.3;
-    })
+    });
   },
   data() {
     return {
@@ -91,8 +155,28 @@ export default {
       linkPathOpacity: 0.3,
       figureHeight: 700,
       figureWidth: 1100,
-      rankOptions: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
-      ranksToShow: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      rankOptions: [
+        "no rank",
+        "domain",
+        "kingdom",
+        "phylum",
+        "class",
+        "order",
+        "family",
+        "genus",
+        "species",
+      ],
+      ranksToShow: [
+        "no rank",
+        "domain",
+        "kingdom",
+        "phylum",
+        "class",
+        "order",
+        "family",
+        "genus",
+        "species",
+      ],
       inputData: "1",
       fileContent1: `#clade_proportion	clade_count	taxon_count	rank	taxID	name
 5.9001	32656	32656	no rank	0	unclassified
@@ -11737,9 +11821,9 @@ export default {
 3.2140	17789	0	genus	9605	                                                            Homo
 3.2140	17789	17789	species	9606	                                                              Homo sapiens
 `,
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
