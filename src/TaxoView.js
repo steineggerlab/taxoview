@@ -263,8 +263,8 @@ export default function TaxoView() {
 
         // If the query is empty, reset all nodes and links to full opacity
         if (query === '' || !query) {
-            svg.selectAll("rect").style("opacity", 1);
-            svg.selectAll("path").style("opacity", config.linkPathOpacity);
+            svg.selectAll("rect").style("fill-opacity", (d) => d.opacity);
+            svg.selectAll(".link-path").style("stroke-opacity", (d) => d.target.opacity * config.linkPathOpacity);
             svg.selectAll("text.node").style("opacity", 1);
             svg.selectAll(".clade-reads").style("opacity", 1);
             return;
@@ -278,8 +278,10 @@ export default function TaxoView() {
         });
 
         // Set opacity for nodes and links
-        svg.selectAll("rect").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightShapeOpacity);
-        svg.selectAll("path").style("opacity", config.lowlightShapeOpacity);
+        svg.selectAll("rect").style("fill-opacity", (d) => (config.searchQueryMatchNodes.has(d.id) ? d.opacity : config.lowlightShapeOpacity));
+		svg.selectAll(".link-path").style("stroke-opacity", (d) =>
+            config.searchQueryMatchNodes.has(d.source.id) && config.searchQueryMatchNodes.has(d.target.id) ? d.target.opacity * config.linkPathOpacity : d.target.opacity * config.lowlightShapeOpacity
+        );
         svg.selectAll("text.node").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightTextOpacity);
         svg.selectAll(".clade-reads").style("opacity", (d) => config.searchQueryMatchNodes.has(d.id) ? 1 : config.lowlightTextOpacity);
     }
