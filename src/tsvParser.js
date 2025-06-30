@@ -49,12 +49,7 @@ export default {
 					record.rank = record.rank === "superkingdom" ? "domain" : record.rank; // Convert 'superkingdom' to 'domain'
 				}
 
-
-
-
-				         
-
-				        return record;
+				return record;
 			})
 			.filter(
 				(record) =>

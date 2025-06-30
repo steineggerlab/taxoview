@@ -3,7 +3,7 @@ name: Auto-format & Lint
 on:
   workflow_dispatch:
   push:
-    branches: [main] 
+    branches: [main]
   pull_request:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         run: pip install pre-commit
 
       - name: Run pre-commit
-        run: pre-commit run --all-files 
+        run: pre-commit run --all-files
 
       - name: Commit & Push fixes
         run: |
