@@ -7,8 +7,8 @@ export default {
 			if (firstRecord === undefined) return false;
 
 			return (
-				(firstRecord.rank === "no rank" && firstRecord.taxon_id === "0" && firstRecord.name === "unclassified") ||
-				(firstRecord.rank === "no rank" && firstRecord.taxon_id === "1" && firstRecord.name === "root")
+				(firstRecord.taxon_id === "0" && firstRecord.name === "unclassified") ||
+				(firstRecord.taxon_id === "1" && firstRecord.name === "root")
 			);
 		};
 

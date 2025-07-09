@@ -51,13 +51,13 @@ export default {
 		},
 		ranksToShow: {
 			type: Array,
-			default: () => ["no rank", ...sankeyRankColumns],
+			default: () => ["root", ...sankeyRankColumns],
 			required: false
 		},
 	},
 	data: () => ({
 		sankeyRankColumns,
-		sankeyRankColumnsWithRoot: ["no rank", ...sankeyRankColumns],
+		sankeyRankColumnsWithRoot: ["root", ...sankeyRankColumns],
 	}),
 	watch: {
 		figureHeight: 'updateSankey',
