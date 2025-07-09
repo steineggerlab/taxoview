@@ -11,5 +11,5 @@ export const rankLabels = {
 	"family": "F",
 	"genus": "G",
 	"species": "S",
-	"no rank": " "
+	"root": " "
 };
