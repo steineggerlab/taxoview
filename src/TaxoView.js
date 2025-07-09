@@ -50,7 +50,7 @@ export default function TaxoView() {
 		fontFill: "black",
 		// superkingdom --> domain
 		rankList: sankeyRankColumns,
-		ranksToShow: ["no rank", ...sankeyRankColumns],
+		ranksToShow: ["root", ...sankeyRankColumns],
 		colorScheme: [
 			"#8CB5B5", // light teal
 			"#785EF0", // purple
@@ -142,6 +142,7 @@ export default function TaxoView() {
 				isUnclassifiedNode: false,
 				isRootNode: false,
 				children: [], // FIXME: change to null?
+				domainAncestor: null,
 			};
 
 			// Add node to its corresponding depth collection
@@ -159,23 +160,23 @@ export default function TaxoView() {
 				nodesByRank[d.rank].push(node);
 			} else if (isUnclassifiedNode(node)) {
 				// FIXME: figure out which rank to put unclassified node in
-				if (!nodesByRank["no rank"]) {
-					nodesByRank["no rank"] = [];
+				if (!nodesByRank["root"]) {
+					nodesByRank["root"] = [];
 				}
-				nodesByRank["no rank"].push(node);
+				nodesByRank["root"].push(node);
 
 				// Reassign some attributes specific to unclassified node
-				node.rank = "no rank";
+				node.rank = "root";
 				node.rankDisplayName = node.name;
 				node.isUnclassifiedNode = true;
 			} else if (isRootNode(node)) {
-				if (!nodesByRank["no rank"]) {
-					nodesByRank["no rank"] = [];
+				if (!nodesByRank["root"]) {
+					nodesByRank["root"] = [];
 				}
-				nodesByRank["no rank"].push(node);
+				nodesByRank["root"].push(node);
 
 				// Reassign some attributes specific to root node
-				node.rank = "no rank"; // FIXME: remove this after fixing logic to leave it as "no rank", same as taxonomyreport
+				node.rank = "root"; // FIXME: remove this after fixing logic to leave it as "no rank", same as taxonomyreport
 				node.rankDisplayName = node.name;
 				node.isRootNode = true;
 			}
@@ -201,6 +202,11 @@ export default function TaxoView() {
 			currentLineage.push(node);
 			node.lineage = [...currentLineage];
 
+			// Store domain ancestor for color grouping
+			const ancestor = node.lineage.slice() // copy
+			.reverse().find((a) => a.rank === "domain");
+			node.domainAncestor = ancestor ? ancestor.name : null;
+
 			// Store current node to parent's children collection (for sankey verification taxonomyreport regeneration)
 			const parent = node.lineage[node.lineage.length - 2];
 			if (parent) {
@@ -208,8 +214,10 @@ export default function TaxoView() {
 			}
 		});
 
-        // Collect and emit ranks present in the original data
-		const rankListWithRoot = ["no rank", ...sankeyRankColumns];
+		// =========== DONE PROCESSING EACH DATA ROW ===========
+
+		// Collect and emit ranks present in the original data
+		const rankListWithRoot = ["root", ...sankeyRankColumns];
 		const ranksPresent = Object.keys(nodesByRank).filter((rank) => rankListWithRoot.includes(rank));
 		config.onRanksPresent(ranksPresent);
 
@@ -365,8 +373,7 @@ export default function TaxoView() {
 			} else if (node.isRootNode) {
 				node.color = config.rootColor;
 			} else {
-				const ancestor = node.lineage.reverse().find((a) => a.rank === "domain");
-				node.color = ancestor ? groupColor(ancestor.name) : config.rootColor;
+				node.color = node.domainAncestor ? groupColor(node.domainAncestor) : config.rootColor;
 			}
 
 			// Set opacity based on node position
@@ -503,6 +510,7 @@ export default function TaxoView() {
 			})
 			.on("click", (_, d) => {
 				if (typeof config.onNodeClick === "function") {
+					console.log(d);
 					config.onNodeClick(d);
 				}
 			});

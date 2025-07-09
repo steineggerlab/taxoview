@@ -100,8 +100,8 @@ export default {
       linkPathOpacity: 0.3,
       figureHeight: 700,
       figureWidth: 1100,
-      rankOptions: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
-      ranksToShow: ["no rank", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      rankOptions: ["root", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
+      ranksToShow: ["root", "domain", "kingdom", "phylum", "class", "order", "family", "genus", "species"],
       inputData: "1",
       searchQuery: "",
       fileContent1: `#clade_proportion	clade_count	taxon_count	rank	taxID	name
