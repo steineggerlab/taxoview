@@ -352,6 +352,9 @@ export default function TaxoView() {
 			)
 		);
 
+		const hasDomainAncestor = graph.nodes.some((n) => !!n.domainAncestor);
+		const overrideColor = hasDomainAncestor ? null : config.colorScheme[0]; // first color in your scheme
+
 		// Build color scale from group names
 		const groupColor = d3.scaleOrdinal().domain(colorGroupNames).range(config.colorScheme);
 
@@ -372,6 +375,9 @@ export default function TaxoView() {
 				node.color = config.unclassifiedLabelColor;
 			} else if (node.isRootNode) {
 				node.color = config.rootColor;
+			} else  if (overrideColor) {
+				// no domainAncestor anywhere → everyone same color
+				node.color = overrideColor;
 			} else {
 				node.color = node.domainAncestor ? groupColor(node.domainAncestor) : config.rootColor;
 			}
