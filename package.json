@@ -11,7 +11,8 @@
 			"import": "./dist/taxoview.es.js",
 			"require": "./dist/taxoview.umd.js"
 		},
-		"./dist/style.css": "./dist/style.css"
+		"./dist/style.css": "./dist/style.css",
+		"./dist/taxoview.ce.js": "./dist/taxoview.ce.js"
 	},
 	"files": [
 		"dist"

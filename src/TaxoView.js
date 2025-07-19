@@ -402,7 +402,8 @@ export default function TaxoView() {
 			.attr("class", "rank-label")
 			.attr("font-weight", config.fontWeight)
 			.attr("font-family", config.fontFamily)
-			.attr("font-size", `${config.rankLabelFontSize}px`);
+			.attr("font-size", `${config.rankLabelFontSize}px`)
+			.attr("fill", `${config.fontFill}`);
 
 		// Draw rank label divider link
 		svg
@@ -516,7 +517,7 @@ export default function TaxoView() {
 			})
 			.on("click", (_, d) => {
 				if (typeof config.onNodeClick === "function") {
-					console.log(d);
+					// console.log(d);
 					config.onNodeClick(d);
 				}
 			});
