@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: example/package-lock.json
 
       # 3. Install deps & build the demo (working-dir = example)
       - name: Install dependencies
@@ -49,8 +49,8 @@ jobs:
         working-directory: example
 
         
-      # - name: Setup Pages
-      #   uses: actions/configure-pages@v5
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
         
       - name: Upload artifact
