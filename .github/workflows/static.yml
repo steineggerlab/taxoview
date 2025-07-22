@@ -41,7 +41,7 @@ jobs:
 
       # 3. Install deps & build the demo (working-dir = example)
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         working-directory: example
 
       - name: Build
